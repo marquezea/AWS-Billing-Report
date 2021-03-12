@@ -7,6 +7,10 @@ Uma solução para pegar os relatório de Billing da AWS e produzir relatório c
 
 # PRE-REQUISITOS CONTA AWS
 1) Conta AWS com usuario 'pythonAutomation' com role de 'S3 Full Access'
-2) Configurar AWS CLI (aws configure) com perfil 'pythonAutomation'
+2) Habilitar Billing Repot em 'Billing Dashboard --> Cost & Usage Reports'
+   S3 bucket          = amarquezelogs
+   Report Path prefix = costreport//AMMCostReport
+   aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/ --profile pythonAutomation
+3) Configurar AWS CLI (aws configure) com perfil 'pythonAutomation'
    aws configure set region <region> --profile pythonAutomation
-    
+   aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/ --profile pythonAutomation

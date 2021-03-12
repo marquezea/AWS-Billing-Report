@@ -10,16 +10,16 @@ from tabulate import tabulate
 from termgraph import termgraph as tg
 
 # # CONSTANTS
-# BILLING_REPORT_BUCKET = 'amarquezelogs'
-# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210201-20210301/20210303T011135Z/'
-# OUTPUT_DATABASE_FILENAME = 'awsbilling.db'
-# PROFILE_NAME='pythonAutomation'
+BILLING_REPORT_BUCKET = 'amarquezelogs'
+BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210201-20210301/20210303T011135Z/'
+OUTPUT_DATABASE_FILENAME = 'awsbilling.db'
+PROFILE_NAME='pythonAutomation'
 
 # CONSTANTS
-BILLING_REPORT_BUCKET = 'backup-chipr-denis'
-BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210201-20210301/20210303T110148Z/'
-OUTPUT_DATABASE_FILENAME = 'awsbilling.db'
-PROFILE_NAME='denischipr'
+# BILLING_REPORT_BUCKET = 'backup-chipr-denis'
+# BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210201-20210301/20210303T110148Z/'
+# OUTPUT_DATABASE_FILENAME = 'awsbilling.db'
+# PROFILE_NAME='denischipr'
 
 # DELETE A FILE
 def deleteFile(filename):
@@ -45,6 +45,7 @@ def unzipFile(gzFilename):
 # CREATE SQLITE DB
 def createMemoryDatabase(extractColumnList, fileStructureFromManifest):
     memDb = sqlite3.connect(':memory:')
+    memDb.row_factory = sqlite3.Row
     dbCursor = memDb.cursor()
     sql = 'BEGIN TRANSACTION;'
     dbCursor.execute(sql)
@@ -106,7 +107,7 @@ def queryDatabase(memoryDB, query,title):
     result = dbCursor.fetchall()
     print('\n' + title)
     print("=" * len(title))
-    print(tabulate(result, ['Service','Sum'], tablefmt='psql', numalign='right', stralign='left'))
+    print(tabulate(result, result[0].keys(), tablefmt='psql', numalign='right', stralign='left'))
 
 
 # FETCH CSV FILE STRUCTURE FROM JSON MANIFEST
@@ -182,19 +183,23 @@ def downloadFilesFromBucket(bucket_name, bucket_path):
 boto3.setup_default_session(profile_name=PROFILE_NAME)
 
 # GLOBAL VARIABLES
-extractColumnList = ['lineItem/LineItemType', 'lineItem/ProductCode', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/UsageType', 'lineItem/Operation', 'lineItem/BlendedCost', 'lineItem/UnblendedCost']
-
+extractColumnList = ['lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', 'lineItem/UsageType', 'lineItem/Operation', 'lineItem/UsageAmount', \
+    'lineItem/BlendedCost', 'lineItem/UnblendedCost', 'bill/BillingPeriodStartDate', 'lineItem/UsageAccountId', 'bill/InvoiceId']
 
 # MAIN FLOW
 s3 = boto3.client('s3') 
-downloadedFiles = downloadFilesFromBucket(BILLING_REPORT_BUCKET, BILLING_REPORT_BUCKET_PATH)
-#downloadedFiles = ['AMMCostReport-00001.csv', 'AMMCostReport-Manifest.json']
+#downloadedFiles = downloadFilesFromBucket(BILLING_REPORT_BUCKET, BILLING_REPORT_BUCKET_PATH)
+downloadedFiles = ['AMMCostReport-00001.csv', 'AMMCostReport-Manifest.json']
 print(downloadedFiles)
 fileStructureFromManifest = fetchFileStructureFromManifest(downloadedFiles[1])
 
 memoryDb = createMemoryDatabase(extractColumnList, fileStructureFromManifest)
 importCsvToDatabase(downloadedFiles[0], memoryDb, extractColumnList, fileStructureFromManifest)
-queryDatabase(memoryDb, 'SELECT min(lineItem_UsageStartDate) as USAGE_START, max(lineItem_UsageEndDate) as USAGE_END, round(sum(lineItem_BlendedCost),2) as TOTAL  FROM LINE_ITEMS', 'PERIODO')
-queryDatabase(memoryDb, 'SELECT lineItem_ProductCode, round(SUM(lineItem_BlendedCost),2) FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode', 'SERVICOS')
-queryDatabase(memoryDb, 'SELECT lineItem_LineItemType, round(SUM(lineItem_BlendedCost),2) FROM LINE_ITEMS GROUP BY lineItem_LineItemType', 'IMPOSTOS')
+queryDatabase(memoryDb, 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(lineItem_UsageStartDate) as USAGE_START, max(lineItem_UsageEndDate) as USAGE_END, round(sum(lineItem_BlendedCost),2) as TOTAL FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId', 'PERIODO')
+queryDatabase(memoryDb, 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS GROUP BY lineItem_LineItemType', 'IMPOSTOS')
+queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode', 'SERVICOS')
+queryDatabase(memoryDb, 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_UsageType', 'USO')
+queryDatabase(memoryDb, 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_Operation', 'OPERATION')
+queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_UsageType', 'USO')
+queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_Operation', 'OPERATION')
 flushMemoryDatabaseToDisk(memoryDb)
