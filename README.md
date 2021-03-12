@@ -15,8 +15,5 @@ Uma solução para pegar os relatório de Billing da AWS e produzir relatório c
    aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/ --profile pythonAutomation
 3) Configurar AWS CLI (aws configure) com perfil 'pythonAutomation'
    aws configure set region <region> --profile pythonAutomation
-<<<<<<< HEAD
    aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/ --profile pythonAutomation
-=======
     
->>>>>>> e80f08a6fe39437f6e244aa62dd7b39406fd93dd
