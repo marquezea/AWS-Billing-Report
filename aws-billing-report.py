@@ -35,7 +35,7 @@ def commandLineVerification():
         if (arg.lower()[0:2] == '--'):
             if (arg.lower() != '--bucket') and (arg.lower() != '--profile') and (arg.lower() != '--billing-report-path'):
                 isOk = False
-                print('error: unknown parameter ' + arg.lower() + '\nusage: python aws-billing-report.py [--profile <aws-cli-profile-name>] --bucket <bucket-name> --path <path-to-billing-report>')
+                print('error: unknown parameter ' + arg.lower() + '\n')
     if (isOk):
         try:
             bucketName = commandLineArguments[commandLineArguments.index('--bucket')+1]
