@@ -4,22 +4,55 @@ import gzip
 import json
 import sqlite3
 import datetime
+import sys
 from pathlib import Path
 from decimal import Decimal
 from tabulate import tabulate
 from termgraph import termgraph as tg
 
 # # CONSTANTS
-BILLING_REPORT_BUCKET = 'amarquezelogs'
-BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210201-20210301/20210303T011135Z/'
-OUTPUT_DATABASE_FILENAME = 'awsbilling.db'
-PROFILE_NAME='pythonAutomation'
+# CACHE_PATH = './cache/'
+# BILLING_REPORT_BUCKET = 'amarquezelogs'
+# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210201-20210301/20210303T011135Z/'
+# PROFILE_NAME='pythonAutomation'
 
 # CONSTANTS
+CACHE_PATH = './cache/'
 # BILLING_REPORT_BUCKET = 'backup-chipr-denis'
-# BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210201-20210301/20210303T110148Z/'
-# OUTPUT_DATABASE_FILENAME = 'awsbilling.db'
+# BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210313T184621Z/'
 # PROFILE_NAME='denischipr'
+
+# GET COMMAND LINE ARGUMENTS
+def commandLineVerification():
+    commandLineResult = {}
+    isOk = True
+    commandLineArguments = []
+    for i, arg in enumerate(sys.argv):
+        if (arg.lower() == '--bucket') or (arg.lower() == '--profile') or (arg.lower() == '--billing-report-path'):
+            commandLineArguments.append(arg.lower())
+        else:
+            commandLineArguments.append(arg)
+        if (arg.lower()[0:2] == '--'):
+            if (arg.lower() != '--bucket') and (arg.lower() != '--profile') and (arg.lower() != '--billing-report-path'):
+                isOk = False
+                print('error: unknown parameter ' + arg.lower() + '\nusage: python aws-billing-report.py [--profile <aws-cli-profile-name>] --bucket <bucket-name> --path <path-to-billing-report>')
+    if (isOk):
+        try:
+            bucketName = commandLineArguments[commandLineArguments.index('--bucket')+1]
+            commandLineResult['--bucket'] = bucketName
+
+            billingReportPath = commandLineArguments[commandLineArguments.index('--billing-report-path')+1]
+            commandLineResult['--billing-report-path'] = billingReportPath
+
+            try:    
+                profile = commandLineArguments[commandLineArguments.index('--profile')+1]
+            except:
+                profile = 'default'
+            commandLineResult['--profile'] = profile
+        except:
+            print('usage: python aws-billing-report.py [--profile <aws-cli-profile-name>] --bucket <bucket-name> --path <path-to-billing-report>')
+    commandLineResult['status'] = isOk
+    return commandLineResult
 
 # DELETE A FILE
 def deleteFile(filename):
@@ -29,34 +62,34 @@ def deleteFile(filename):
         print("The file does not exist")
 
 # UNZIP GZ FILE
-def unzipFile(gzFilename):
-    gzFile = gzip.open(gzFilename, 'rb')
+def unzipFile(cachePath, gzFilename):
+    gzFile = gzip.open(cachePath + gzFilename, 'rb')
     file_content = gzFile.read()
     gzFile.close()
 
-    unzipedFile = open(Path(gzFilename).stem, "wb")
+    unzipedFile = open(cachePath + gzFilename[:-3], "wb")
     unzipedFile.write(file_content)
     unzipedFile.close()
 
-    deleteFile(gzFilename)
+    deleteFile(cachePath + gzFilename)
 
-    return Path(gzFilename).stem
+    return gzFilename[:-3]
 
 # CREATE SQLITE DB
-def createMemoryDatabase(extractColumnList, fileStructureFromManifest):
+def createMemoryDatabase(extractColumnList, fileManifest):
     memDb = sqlite3.connect(':memory:')
     memDb.row_factory = sqlite3.Row
     dbCursor = memDb.cursor()
     sql = 'BEGIN TRANSACTION;'
     dbCursor.execute(sql)
-    sql = 'CREATE TABLE LINE_ITEMS (\n'
+    sql = 'CREATE TABLE IF NOT EXISTS LINE_ITEMS (\n'
     for index, column in enumerate(extractColumnList):
         dbColumnName = column.replace('/', '_')
-        if (fileStructureFromManifest[column] == 'String'):
+        if (fileManifest['fileColumns'][column] == 'String'):
            dbColumnDataType = 'TEXT'
-        if (fileStructureFromManifest[column] == 'BigDecimal'):
+        if (fileManifest['fileColumns'][column] == 'BigDecimal'):
            dbColumnDataType = 'NUMBER'
-        if (fileStructureFromManifest[column] == 'DateTime'):
+        if (fileManifest['fileColumns'][column] == 'DateTime'):
            dbColumnDataType = 'TEXT'
         if ((index+1) == len(extractColumnList)):
             sql = sql + dbColumnName + ' ' + dbColumnDataType + ' NOT NULL\n'
@@ -67,18 +100,22 @@ def createMemoryDatabase(extractColumnList, fileStructureFromManifest):
     return memDb
 
 # FLUSH SQLLITE DB IN MEMORY TO DISK
-def flushMemoryDatabaseToDisk(memoryDb):
-    if os.path.isfile(OUTPUT_DATABASE_FILENAME):
-        os.remove(OUTPUT_DATABASE_FILENAME)
-    fileDB = sqlite3.connect(OUTPUT_DATABASE_FILENAME)
+def flushMemoryDatabaseToDisk(memoryDb, account):
+    if (os.path.exists(account+'.db')):
+        os.remove(account+'.db')
+    fileDB = sqlite3.connect(account+'.db')
     with fileDB:
         for line in memoryDb.iterdump():
             if line not in ('BEGIN;', 'COMMIT;'): # let python handle the transactions
-                fileDB.execute(line)
+                try:
+                    fileDB.execute(line)
+                except (TypeError, sqlite3.OperationalError) as e:
+                    print(line)
+                    print(e)
     fileDB.commit()
 
 # INSERT RECORD ON DATABASE
-def insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fileStructureFromManifest):
+def insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fileManifest):
     sql = 'INSERT INTO LINE_ITEMS (\n'
     for index, column in enumerate(extractColumnList):
         if ((index+1) == len(extractColumnList)):
@@ -86,11 +123,11 @@ def insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fil
         else:
             sql = sql + column.replace('/','_') + ',\n' 
     for index, columnValue in enumerate(columnValues):
-        if (fileStructureFromManifest[extractColumnList[index]] == 'String'):
+        if (fileManifest['fileColumns'][extractColumnList[index]] == 'String'):
             convertedValue = '"' + columnValue + '"' 
-        if (fileStructureFromManifest[extractColumnList[index]] == 'DateTime'):
+        if (fileManifest['fileColumns'][extractColumnList[index]] == 'DateTime'):
             convertedValue = '"' + columnValue.strftime('%Y-%m-%d') + '"' 
-        if (fileStructureFromManifest[extractColumnList[index]] == 'BigDecimal'):
+        if (fileManifest['fileColumns'][extractColumnList[index]] == 'BigDecimal'):
             convertedValue = str(columnValue)
         if ((index+1) == len(columnValues)):
             sql = sql + convertedValue + ');\n'
@@ -111,22 +148,25 @@ def queryDatabase(memoryDB, query,title):
 
 
 # FETCH CSV FILE STRUCTURE FROM JSON MANIFEST
-def fetchFileStructureFromManifest(filename):
-    jsonManifestFile = open(filename)
+def fetchManifest(cachePath, filename):
+    jsonManifestFile = open(cachePath + filename)
     jsonManifest = json.loads(jsonManifestFile.read())
     jsonManifestFile.close()
 
+    manifest = {}
+    manifest['account'] = jsonManifest['account']
     fileStructure = {}
     for column in jsonManifest['columns']:
         columnName = column['category'] + '/' + column['name']
         columnDataType = column['type']
         fileStructure[columnName] = columnDataType
-    return fileStructure
+    manifest['fileColumns'] = fileStructure
+    return manifest
 
 # IMPORT CSV FILE INTO MEMORY DATABASE
-def importCsvToDatabase(csvFilename, memoryDB, extractColumnList, fileStructureFromManifest):
+def importCsvToDatabase(cachePath, csvFilename, memoryDB, extractColumnList, fileManifest):
 
-    with open(csvFilename) as f:
+    with open(cachePath + csvFilename) as f:
         #print(extractColumnList)
 
         # read header line with the column names
@@ -140,7 +180,7 @@ def importCsvToDatabase(csvFilename, memoryDB, extractColumnList, fileStructureF
         # print the datatype of each extract column
         columnDatatypes = []
         for field in extractColumnList:
-            columnDatatype = fileStructureFromManifest[field]
+            columnDatatype = fileManifest['fileColumns'][field]
             columnDatatypes.append(columnDatatype)
         #print(columnDatatypes)
         # iterate over file and get each field value
@@ -150,56 +190,70 @@ def importCsvToDatabase(csvFilename, memoryDB, extractColumnList, fileStructureF
             for field in extractColumnList:
                 columnIndex = columnHeader.index(field)
                 columnValue = record[columnIndex]
-                if (fileStructureFromManifest[field] == 'String'):
+                if (fileManifest['fileColumns'][field] == 'String'):
                     columnValues.append(record[columnIndex])
-                if (fileStructureFromManifest[field] == 'BigDecimal'):
+                if (fileManifest['fileColumns'][field] == 'BigDecimal'):
                     columnValues.append(Decimal(record[columnIndex]))
-                if (fileStructureFromManifest[field] == 'DateTime'):
+                if (fileManifest['fileColumns'][field] == 'DateTime'):
                     #columnValues.append(record[columnIndex])
                     columnValues.append(datetime.datetime.strptime(record[columnIndex],'%Y-%m-%dT%H:%M:%SZ'))
             # if (columnValues[0] == 'Usage'):
                 #print(columnValues)
-            insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fileStructureFromManifest)
+            insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fileManifest)
+
+# CREATE SUBDIRECTORIES UNDER CACHE
+def makeCacheFolders(filenameWithPath):
+    fileSplit = filenameWithPath.split('/')
+    startPath = './cache/'
+    for index, pathPart in enumerate(fileSplit):
+        if ((index+1) < len(fileSplit)):
+            startPath = startPath + pathPart + '/'
+            if (not os.path.exists(startPath)):
+                os.mkdir(startPath)
+
 
 # LIST CONTENT OF DIRECTORY AND DOWNLOAD
 def downloadFilesFromBucket(bucket_name, bucket_path):
+    # check if cache exists and create it
+    if (not os.path.exists(CACHE_PATH)):
+        os.mkdir(CACHE_PATH)
     bucketContents = s3.list_objects(Bucket=bucket_name,Prefix=bucket_path)['Contents']
     downloadFiles = []
     for item in bucketContents:
         filenameWithPath = item['Key']
         filename = Path(filenameWithPath).name
-        #print(filenameWithPath, filename)
-        s3.download_file(BILLING_REPORT_BUCKET, filenameWithPath, filename)
+        makeCacheFolders(filenameWithPath)
+        s3.download_file(bucket_name, filenameWithPath, CACHE_PATH + filenameWithPath)
         if (filename[-3:] == '.gz'):
-            downloadFiles.append(unzipFile(filename))
+            downloadFiles.append(unzipFile(CACHE_PATH, filenameWithPath))
         if (filename[-5:] == '.json'):
-            downloadFiles.append(filename)
-            fetchFileStructureFromManifest(filename)
+            downloadFiles.append(filenameWithPath)
 
     return downloadFiles
 
-# INITIALIZE BOTO3
-# choose profile to be used 
-boto3.setup_default_session(profile_name=PROFILE_NAME)
-
-# GLOBAL VARIABLES
-extractColumnList = ['lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', 'lineItem/UsageType', 'lineItem/Operation', 'lineItem/UsageAmount', \
-    'lineItem/BlendedCost', 'lineItem/UnblendedCost', 'bill/BillingPeriodStartDate', 'lineItem/UsageAccountId', 'bill/InvoiceId']
-
 # MAIN FLOW
-s3 = boto3.client('s3') 
-#downloadedFiles = downloadFilesFromBucket(BILLING_REPORT_BUCKET, BILLING_REPORT_BUCKET_PATH)
-downloadedFiles = ['AMMCostReport-00001.csv', 'AMMCostReport-Manifest.json']
-print(downloadedFiles)
-fileStructureFromManifest = fetchFileStructureFromManifest(downloadedFiles[1])
+commandLineResult = commandLineVerification()
+if (commandLineResult['status']):
+    # INITIALIZE BOTO3
+    # choose profile to be used 
+    boto3.setup_default_session(profile_name=commandLineResult['--profile'])
 
-memoryDb = createMemoryDatabase(extractColumnList, fileStructureFromManifest)
-importCsvToDatabase(downloadedFiles[0], memoryDb, extractColumnList, fileStructureFromManifest)
-queryDatabase(memoryDb, 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(lineItem_UsageStartDate) as USAGE_START, max(lineItem_UsageEndDate) as USAGE_END, round(sum(lineItem_BlendedCost),2) as TOTAL FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId', 'PERIODO')
-queryDatabase(memoryDb, 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS GROUP BY lineItem_LineItemType', 'IMPOSTOS')
-queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode', 'SERVICOS')
-queryDatabase(memoryDb, 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_UsageType', 'USO')
-queryDatabase(memoryDb, 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_Operation', 'OPERATION')
-queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_UsageType', 'USO')
-queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_Operation', 'OPERATION')
-flushMemoryDatabaseToDisk(memoryDb)
+    # GLOBAL VARIABLES
+    extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', \
+        'lineItem/UsageType', 'lineItem/Operation', 'lineItem/UsageAmount', 'lineItem/BlendedCost', 'lineItem/UnblendedCost', 'bill/BillingPeriodStartDate', 'lineItem/UsageAccountId', 'bill/InvoiceId']
+
+    s3 = boto3.client('s3')
+    downloadedFiles = downloadFilesFromBucket(commandLineResult['--bucket'], commandLineResult['--billing-report-path'])
+    print(downloadedFiles)
+    fileManifest = fetchManifest(CACHE_PATH,downloadedFiles[1])
+
+    memoryDb = createMemoryDatabase(extractColumnList, fileManifest)
+    importCsvToDatabase(CACHE_PATH,downloadedFiles[0], memoryDb, extractColumnList, fileManifest)
+    queryDatabase(memoryDb, 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(lineItem_UsageStartDate) as USAGE_START, max(lineItem_UsageEndDate) as USAGE_END, round(sum(lineItem_BlendedCost),2) as TOTAL FROM LINE_ITEMS where lineItem_LineItemType = "Usage" group by lineItem_UsageAccountId, bill_InvoiceId', 'PERIODO')
+    queryDatabase(memoryDb, 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS GROUP BY lineItem_LineItemType', 'IMPOSTOS')
+    queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode', 'SERVICOS')
+    queryDatabase(memoryDb, 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_UsageType', 'USO')
+    queryDatabase(memoryDb, 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_Operation', 'OPERATION')
+    #queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_UsageType', 'USO')
+    #queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_Operation', 'OPERATION')
+    flushMemoryDatabaseToDisk(memoryDb, fileManifest['account'])
