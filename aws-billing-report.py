@@ -147,7 +147,10 @@ def queryDatabase(memoryDB, query,title):
     result = dbCursor.fetchall()
     print('\n' + title)
     print("=" * len(title))
-    print(tabulate(result, result[0].keys(), tablefmt='psql', numalign='right', stralign='left'))
+    if (len(result) > 0):
+        print(tabulate(result, result[0].keys(), tablefmt='psql', numalign='right', stralign='left'))
+    else:
+        print('No data not available for this query')
 
 
 # FETCH CSV FILE STRUCTURE FROM JSON MANIFEST
