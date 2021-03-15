@@ -18,6 +18,9 @@ from termgraph import termgraph as tg
 
 # CONSTANTS
 CACHE_PATH = './cache/'
+PARAM_PROFILE = '--profile'
+PARAM_BUCKET = '--bucket'
+PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 # BILLING_REPORT_BUCKET = 'backup-chipr-denis'
 # BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210313T184621Z/'
 # PROFILE_NAME='denischipr'
@@ -28,29 +31,29 @@ def commandLineVerification():
     isOk = True
     commandLineArguments = []
     for i, arg in enumerate(sys.argv):
-        if (arg.lower() == '--bucket') or (arg.lower() == '--profile') or (arg.lower() == '--billing-report-path'):
+        if (arg.lower() == PARAM_BUCKET) or (arg.lower() == PARAM_PROFILE) or (arg.lower() == PARAM_BILLING_REPORT_PATH):
             commandLineArguments.append(arg.lower())
         else:
             commandLineArguments.append(arg)
         if (arg.lower()[0:2] == '--'):
-            if (arg.lower() != '--bucket') and (arg.lower() != '--profile') and (arg.lower() != '--billing-report-path'):
+            if (arg.lower() != PARAM_BUCKET) and (arg.lower() != PARAM_PROFILE) and (arg.lower() != PARAM_BILLING_REPORT_PATH):
                 isOk = False
                 print('error: unknown parameter ' + arg.lower() + '\n')
     if (isOk):
         try:
-            bucketName = commandLineArguments[commandLineArguments.index('--bucket')+1]
-            commandLineResult['--bucket'] = bucketName
+            bucketName = commandLineArguments[commandLineArguments.index(PARAM_BUCKET)+1]
+            commandLineResult[PARAM_BUCKET] = bucketName
 
-            billingReportPath = commandLineArguments[commandLineArguments.index('--billing-report-path')+1]
-            commandLineResult['--billing-report-path'] = billingReportPath
+            billingReportPath = commandLineArguments[commandLineArguments.index(PARAM_BILLING_REPORT_PATH)+1]
+            commandLineResult[PARAM_BILLING_REPORT_PATH] = billingReportPath
 
             try:    
-                profile = commandLineArguments[commandLineArguments.index('--profile')+1]
+                profile = commandLineArguments[commandLineArguments.index(PARAM_PROFILE)+1]
             except:
                 profile = 'default'
-            commandLineResult['--profile'] = profile
+            commandLineResult[PARAM_PROFILE] = profile
         except:
-            print('usage: python aws-billing-report.py [--profile <aws-cli-profile-name>] --bucket <bucket-name> --path <path-to-billing-report>')
+            print('usage: python aws-billing-report.py [{0} <aws-cli-profile-name>] {1} <bucket-name> {2} <path-to-billing-report>'.format(PARAM_PROFILE,PARAM_BUCKET,PARAM_BILLING_REPORT_PATH))
     commandLineResult['status'] = isOk
     return commandLineResult
 
@@ -236,24 +239,25 @@ commandLineResult = commandLineVerification()
 if (commandLineResult['status']):
     # INITIALIZE BOTO3
     # choose profile to be used 
-    boto3.setup_default_session(profile_name=commandLineResult['--profile'])
+    boto3.setup_default_session(profile_name=commandLineResult[PARAM_PROFILE])
 
     # GLOBAL VARIABLES
     extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', \
         'lineItem/UsageType', 'lineItem/Operation', 'lineItem/UsageAmount', 'lineItem/BlendedCost', 'lineItem/UnblendedCost', 'bill/BillingPeriodStartDate', 'lineItem/UsageAccountId', 'bill/InvoiceId']
 
     s3 = boto3.client('s3')
-    downloadedFiles = downloadFilesFromBucket(commandLineResult['--bucket'], commandLineResult['--billing-report-path'])
+    downloadedFiles = downloadFilesFromBucket(commandLineResult[PARAM_BUCKET], commandLineResult[PARAM_BILLING_REPORT_PATH])
     print(downloadedFiles)
     fileManifest = fetchManifest(CACHE_PATH,downloadedFiles[1])
 
     memoryDb = createMemoryDatabase(extractColumnList, fileManifest)
     importCsvToDatabase(CACHE_PATH,downloadedFiles[0], memoryDb, extractColumnList, fileManifest)
     queryDatabase(memoryDb, 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(lineItem_UsageStartDate) as USAGE_START, max(lineItem_UsageEndDate) as USAGE_END, round(sum(lineItem_BlendedCost),2) as TOTAL FROM LINE_ITEMS where lineItem_LineItemType = "Usage" group by lineItem_UsageAccountId, bill_InvoiceId', 'PERIODO')
-    queryDatabase(memoryDb, 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS GROUP BY lineItem_LineItemType', 'IMPOSTOS')
-    queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode', 'SERVICOS')
-    queryDatabase(memoryDb, 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_UsageType', 'USO')
-    queryDatabase(memoryDb, 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_Operation', 'OPERATION')
-    #queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_UsageType', 'USO')
-    #queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_Operation', 'OPERATION')
+    queryDatabase(memoryDb, 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS GROUP BY lineItem_LineItemType', 'TYPE BREAKDOWN')
+    queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode', 'SERVICES')
+    queryDatabase(memoryDb, 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_UsageType', 'USAGE')
+    queryDatabase(memoryDb, 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_Operation', 'OPERATIONS')
+    queryDatabase(memoryDb, 'select lineItem_ProductCode AS PRODUCT_CODE, lineItem_UsageEndDate, round(sum(lineitem_blendedcost),2) as TOTAL from line_items group by lineItem_UsageEndDate, lineItem_ProductCode order by lineItem_ProductCode, lineItem_UsageEndDate', 'DAILY COSTS PER SERVICE')
+    queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_UsageType', 'USO')
+    queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_Operation', 'OPERATION')
     flushMemoryDatabaseToDisk(memoryDb, fileManifest['account'])
