@@ -1,0 +1,525 @@
+['costreport/AMMCostReport/20210201-20210301/20210303T011135Z/AMMCostReport-00001.csv', 'costreport/AMMCostReport/20210201-20210301/20210303T011135Z/AMMCostReport-Manifest.json']
+
+PERIODO
+=======
++--------------+--------------+---------------+-------------+---------+
+|   ACCOUNT_ID |   INVOICE_ID | USAGE_START   | USAGE_END   |   TOTAL |
+|--------------+--------------+---------------+-------------+---------|
+| 335707348421 |    685383773 | 2021-02-01    | 2021-03-01  |    6.43 |
++--------------+--------------+---------------+-------------+---------+
+
+TYPE BREAKDOWN
+==============
++-------------+----------------+----------------+
+| ITEM_TYPE   |   USAGE_AMOUNT |   BLENDED_COST |
+|-------------+----------------+----------------|
+| Tax         |             10 |           0.79 |
+| Usage       |         248638 |           5.64 |
++-------------+----------------+----------------+
+
+SERVICES
+========
++-------------------+----------------+----------------+
+| PRODUCT_CODE      |   USAGE_AMOUNT |   BLENDED_COST |
+|-------------------+----------------+----------------|
+| AWSGlue           |              1 |              0 |
+| AWSSecretsManager |              1 |            0.4 |
+| AmazonCloudFront  |         531.02 |              0 |
+| AmazonCloudWatch  |          18.99 |            0.3 |
+| AmazonDynamoDB    |        8064.01 |              0 |
+| AmazonEC2         |           7.58 |           0.38 |
+| AmazonECR         |           0.05 |              0 |
+| AmazonRoute53     |           3065 |              1 |
+| AmazonS3          |         236949 |           3.55 |
++-------------------+----------------+----------------+
+
+RESERVED INSTANCE
+=================
+No data not available for this query
+
+USAGE
+=====
++---------------------------------+----------------+----------------+
+| USAGE_TYPE                      |   USAGE_AMOUNT |   BLENDED_COST |
+|---------------------------------+----------------+----------------|
+| CA-DataTransfer-Out-Bytes       |              0 |              0 |
+| CA-Requests-Tier1               |              1 |              0 |
+| CA-Requests-Tier2-HTTPS         |              1 |              0 |
+| CW:AlarmMonitorUsage            |           4.99 |            0.3 |
+| CW:Requests                     |              6 |              0 |
+| DNS-Queries                     |           2329 |              0 |
+| EBS:SnapshotUsage               |           4.73 |           0.24 |
+| EU-DataTransfer-Out-Bytes       |              0 |              0 |
+| EU-DataTransfer-Out-OBytes      |              0 |              0 |
+| EU-Requests-HTTP-Proxy          |              1 |              0 |
+| EU-Requests-Tier1               |              4 |              0 |
+| EU-Requests-Tier2-HTTPS         |            150 |              0 |
+| HostedZone                      |              2 |              1 |
+| Intra-AWS-DNS-Queries           |            734 |              0 |
+| Inventory-ObjectsListed         |         157432 |              0 |
+| JP-DataTransfer-Out-Bytes       |              0 |              0 |
+| JP-Requests-Tier1               |             23 |              0 |
+| JP-Requests-Tier2-HTTPS         |             55 |              0 |
+| Monitoring-Automation-INT       |          39358 |            0.1 |
+| ReadCapacityUnit-Hrs            |           1344 |              0 |
+| Requests-Tier1                  |            216 |              0 |
+| Requests-Tier2                  |            267 |              0 |
+| SA-DataTransfer-Out-Bytes       |              0 |              0 |
+| SA-Requests-Tier1               |             40 |              0 |
+| SA-Requests-Tier2-HTTPS         |             38 |              0 |
+| SAE1-CW:AlarmMonitorUsage       |           7.99 |              0 |
+| SAE1-DataTransfer-Out-Bytes     |              0 |              0 |
+| SAE1-ReadCapacityUnit-Hrs       |           2688 |              0 |
+| SAE1-Requests-Tier1             |              1 |              0 |
+| SAE1-Requests-Tier2             |             41 |              0 |
+| SAE1-TimedStorage-ByteHrs       |           0.01 |              0 |
+| SAE1-USE1-AWS-Out-Bytes         |              0 |              0 |
+| SAE1-USW2-AWS-Out-Bytes         |              0 |              0 |
+| SAE1-WriteCapacityUnit-Hrs      |           2688 |              0 |
+| StorageAnalytics-ObjCount       |          39358 |              0 |
+| TagStorage-TagHrs               |              2 |              0 |
+| TimedStorage-ByteHrs            |           1.54 |           0.04 |
+| TimedStorage-INT-FA-ByteHrs     |           0.04 |              0 |
+| TimedStorage-INT-IA-ByteHrs     |         272.71 |           3.41 |
+| TimedStorage-SIA-SmObjects      |              0 |              0 |
+| US-DataTransfer-Out-Bytes       |           0.01 |              0 |
+| US-Requests-Tier1               |             26 |              0 |
+| US-Requests-Tier2-HTTPS         |            192 |              0 |
+| USE1-AWSSecretsManager-Secrets  |              1 |            0.4 |
+| USE1-Catalog-Storage            |              1 |              0 |
+| USE1-CloudFront-Out-Bytes       |           0.01 |              0 |
+| USE1-TimedBackupStorage-ByteHrs |           0.01 |              0 |
+| USE1-TimedStorage-ByteHrs       |              0 |              0 |
+| USE2-EBS:SnapshotUsage          |           2.85 |           0.14 |
+| WriteCapacityUnit-Hrs           |           1344 |              0 |
++---------------------------------+----------------+----------------+
+
+RESERVED INSTANCE - OPERATIONS
+==============================
+No data not available for this query
+
+USAGE - OPERATIONS
+==================
++----------------------------------+----------------+----------------+
+| USAGE_TYPE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|----------------------------------+----------------+----------------|
+| A                                |            998 |              0 |
+| AAAA                             |            460 |              0 |
+| BackupStorage                    |           0.01 |              0 |
+| CAA                              |             45 |              0 |
+| CNAME                            |             35 |              0 |
+| CommittedThroughput              |           8064 |              0 |
+| CopyObject                       |             23 |              0 |
+| CreateSnapshot                   |           7.58 |           0.38 |
+| DNSKEY                           |            143 |              0 |
+| GET                              |         496.02 |              0 |
+| GetMetricStatistics              |              3 |              0 |
+| GetObject                        |              4 |              0 |
+| HEAD                             |             34 |              0 |
+| HeadBucket                       |              6 |              0 |
+| HostedZone                       |              2 |              1 |
+| HourlyStorageMetering            |              0 |              0 |
+| IntelligentTieringFAStorage      |           0.04 |              0 |
+| IntelligentTieringIAStorage      |         272.71 |           3.41 |
+| IntelligentTieringStorage        |          39358 |            0.1 |
+| Inventory                        |         157432 |              0 |
+| ListAllMyBuckets                 |              1 |              0 |
+| ListBucket                       |              1 |              0 |
+| ListMetrics                      |              3 |              0 |
+| MX                               |            231 |              0 |
+| NS                               |            320 |              0 |
+| ObjectTagCount                   |              2 |              0 |
+| POST                             |              1 |              0 |
+| PutObject                        |            192 |              0 |
+| S3.STORAGE_CLASS_ANALYSIS.OBJECT |          39358 |              0 |
+| SOA                              |            343 |              0 |
+| SRV                              |              3 |              0 |
+| SecretUsage                      |              1 |            0.4 |
+| StandardIASizeOverhead           |              0 |              0 |
+| StandardStorage                  |            1.5 |           0.03 |
+| Storage                          |              1 |              0 |
+| TXT                              |            444 |              0 |
+| TimedStorage-ByteHrs             |           0.05 |              0 |
+| UNSUPPORTED                      |             41 |              0 |
+| Unknown                          |          12.98 |            0.3 |
+| WebsiteGetObject                 |         280.01 |              0 |
+| WebsiteHeadObject                |             18 |              0 |
++----------------------------------+----------------+----------------+
+
+DAILY COSTS PER SERVICE
+=======================
++-------------------+------------+---------+
+| PRODUCT_CODE      | DATE       |   TOTAL |
+|-------------------+------------+---------|
+| AWSDataTransfer   | 2021-03-01 |       0 |
+| AWSGlue           | 2021-02-01 |       0 |
+| AWSGlue           | 2021-02-02 |       0 |
+| AWSGlue           | 2021-02-03 |       0 |
+| AWSGlue           | 2021-02-04 |       0 |
+| AWSGlue           | 2021-02-05 |       0 |
+| AWSGlue           | 2021-02-06 |       0 |
+| AWSGlue           | 2021-02-07 |       0 |
+| AWSGlue           | 2021-02-08 |       0 |
+| AWSGlue           | 2021-02-09 |       0 |
+| AWSGlue           | 2021-02-10 |       0 |
+| AWSGlue           | 2021-02-11 |       0 |
+| AWSGlue           | 2021-02-12 |       0 |
+| AWSGlue           | 2021-02-13 |       0 |
+| AWSGlue           | 2021-02-14 |       0 |
+| AWSGlue           | 2021-02-15 |       0 |
+| AWSGlue           | 2021-02-16 |       0 |
+| AWSGlue           | 2021-02-17 |       0 |
+| AWSGlue           | 2021-02-18 |       0 |
+| AWSGlue           | 2021-02-19 |       0 |
+| AWSGlue           | 2021-02-20 |       0 |
+| AWSGlue           | 2021-02-21 |       0 |
+| AWSGlue           | 2021-02-22 |       0 |
+| AWSGlue           | 2021-02-23 |       0 |
+| AWSGlue           | 2021-02-24 |       0 |
+| AWSGlue           | 2021-02-25 |       0 |
+| AWSGlue           | 2021-02-26 |       0 |
+| AWSGlue           | 2021-02-27 |       0 |
+| AWSGlue           | 2021-02-28 |       0 |
+| AWSGlue           | 2021-03-01 |       0 |
+| AWSSecretsManager | 2021-02-01 |    0.01 |
+| AWSSecretsManager | 2021-02-02 |    0.01 |
+| AWSSecretsManager | 2021-02-03 |    0.01 |
+| AWSSecretsManager | 2021-02-04 |    0.01 |
+| AWSSecretsManager | 2021-02-05 |    0.01 |
+| AWSSecretsManager | 2021-02-06 |    0.01 |
+| AWSSecretsManager | 2021-02-07 |    0.01 |
+| AWSSecretsManager | 2021-02-08 |    0.01 |
+| AWSSecretsManager | 2021-02-09 |    0.01 |
+| AWSSecretsManager | 2021-02-10 |    0.01 |
+| AWSSecretsManager | 2021-02-11 |    0.01 |
+| AWSSecretsManager | 2021-02-12 |    0.01 |
+| AWSSecretsManager | 2021-02-13 |    0.01 |
+| AWSSecretsManager | 2021-02-14 |    0.01 |
+| AWSSecretsManager | 2021-02-15 |    0.01 |
+| AWSSecretsManager | 2021-02-16 |    0.01 |
+| AWSSecretsManager | 2021-02-17 |    0.01 |
+| AWSSecretsManager | 2021-02-18 |    0.01 |
+| AWSSecretsManager | 2021-02-19 |    0.01 |
+| AWSSecretsManager | 2021-02-20 |    0.01 |
+| AWSSecretsManager | 2021-02-21 |    0.01 |
+| AWSSecretsManager | 2021-02-22 |    0.01 |
+| AWSSecretsManager | 2021-02-23 |    0.01 |
+| AWSSecretsManager | 2021-02-24 |    0.01 |
+| AWSSecretsManager | 2021-02-25 |    0.01 |
+| AWSSecretsManager | 2021-02-26 |    0.01 |
+| AWSSecretsManager | 2021-02-27 |    0.01 |
+| AWSSecretsManager | 2021-02-28 |    0.01 |
+| AWSSecretsManager | 2021-03-01 |    0.05 |
+| AmazonCloudFront  | 2021-02-01 |       0 |
+| AmazonCloudFront  | 2021-02-02 |       0 |
+| AmazonCloudFront  | 2021-02-03 |       0 |
+| AmazonCloudFront  | 2021-02-04 |       0 |
+| AmazonCloudFront  | 2021-02-05 |       0 |
+| AmazonCloudFront  | 2021-02-06 |       0 |
+| AmazonCloudFront  | 2021-02-07 |       0 |
+| AmazonCloudFront  | 2021-02-08 |       0 |
+| AmazonCloudFront  | 2021-02-09 |       0 |
+| AmazonCloudFront  | 2021-02-10 |       0 |
+| AmazonCloudFront  | 2021-02-11 |       0 |
+| AmazonCloudFront  | 2021-02-12 |       0 |
+| AmazonCloudFront  | 2021-02-13 |       0 |
+| AmazonCloudFront  | 2021-02-14 |       0 |
+| AmazonCloudFront  | 2021-02-15 |       0 |
+| AmazonCloudFront  | 2021-02-16 |       0 |
+| AmazonCloudFront  | 2021-02-17 |       0 |
+| AmazonCloudFront  | 2021-02-18 |       0 |
+| AmazonCloudFront  | 2021-02-19 |       0 |
+| AmazonCloudFront  | 2021-02-20 |       0 |
+| AmazonCloudFront  | 2021-02-21 |       0 |
+| AmazonCloudFront  | 2021-02-22 |       0 |
+| AmazonCloudFront  | 2021-02-23 |       0 |
+| AmazonCloudFront  | 2021-02-24 |       0 |
+| AmazonCloudFront  | 2021-02-25 |       0 |
+| AmazonCloudFront  | 2021-02-26 |       0 |
+| AmazonCloudFront  | 2021-02-27 |       0 |
+| AmazonCloudFront  | 2021-02-28 |       0 |
+| AmazonCloudFront  | 2021-03-01 |       0 |
+| AmazonCloudWatch  | 2021-02-01 |       0 |
+| AmazonCloudWatch  | 2021-02-02 |       0 |
+| AmazonCloudWatch  | 2021-02-03 |       0 |
+| AmazonCloudWatch  | 2021-02-04 |       0 |
+| AmazonCloudWatch  | 2021-02-05 |       0 |
+| AmazonCloudWatch  | 2021-02-06 |       0 |
+| AmazonCloudWatch  | 2021-02-07 |       0 |
+| AmazonCloudWatch  | 2021-02-08 |       0 |
+| AmazonCloudWatch  | 2021-02-09 |       0 |
+| AmazonCloudWatch  | 2021-02-10 |       0 |
+| AmazonCloudWatch  | 2021-02-11 |       0 |
+| AmazonCloudWatch  | 2021-02-12 |    0.01 |
+| AmazonCloudWatch  | 2021-02-13 |    0.02 |
+| AmazonCloudWatch  | 2021-02-14 |    0.02 |
+| AmazonCloudWatch  | 2021-02-15 |    0.02 |
+| AmazonCloudWatch  | 2021-02-16 |    0.02 |
+| AmazonCloudWatch  | 2021-02-17 |    0.02 |
+| AmazonCloudWatch  | 2021-02-18 |    0.02 |
+| AmazonCloudWatch  | 2021-02-19 |    0.02 |
+| AmazonCloudWatch  | 2021-02-20 |    0.02 |
+| AmazonCloudWatch  | 2021-02-21 |    0.02 |
+| AmazonCloudWatch  | 2021-02-22 |    0.02 |
+| AmazonCloudWatch  | 2021-02-23 |    0.02 |
+| AmazonCloudWatch  | 2021-02-24 |    0.02 |
+| AmazonCloudWatch  | 2021-02-25 |    0.02 |
+| AmazonCloudWatch  | 2021-02-26 |    0.02 |
+| AmazonCloudWatch  | 2021-02-27 |    0.02 |
+| AmazonCloudWatch  | 2021-02-28 |    0.02 |
+| AmazonCloudWatch  | 2021-03-01 |    0.05 |
+| AmazonDynamoDB    | 2021-02-01 |       0 |
+| AmazonDynamoDB    | 2021-02-02 |       0 |
+| AmazonDynamoDB    | 2021-02-03 |       0 |
+| AmazonDynamoDB    | 2021-02-04 |       0 |
+| AmazonDynamoDB    | 2021-02-05 |       0 |
+| AmazonDynamoDB    | 2021-02-06 |       0 |
+| AmazonDynamoDB    | 2021-02-07 |       0 |
+| AmazonDynamoDB    | 2021-02-08 |       0 |
+| AmazonDynamoDB    | 2021-02-09 |       0 |
+| AmazonDynamoDB    | 2021-02-10 |       0 |
+| AmazonDynamoDB    | 2021-02-11 |       0 |
+| AmazonDynamoDB    | 2021-02-12 |       0 |
+| AmazonDynamoDB    | 2021-02-13 |       0 |
+| AmazonDynamoDB    | 2021-02-14 |       0 |
+| AmazonDynamoDB    | 2021-02-15 |       0 |
+| AmazonDynamoDB    | 2021-02-16 |       0 |
+| AmazonDynamoDB    | 2021-02-17 |       0 |
+| AmazonDynamoDB    | 2021-02-18 |       0 |
+| AmazonDynamoDB    | 2021-02-19 |       0 |
+| AmazonDynamoDB    | 2021-02-20 |       0 |
+| AmazonDynamoDB    | 2021-02-21 |       0 |
+| AmazonDynamoDB    | 2021-02-22 |       0 |
+| AmazonDynamoDB    | 2021-02-23 |       0 |
+| AmazonDynamoDB    | 2021-02-24 |       0 |
+| AmazonDynamoDB    | 2021-02-25 |       0 |
+| AmazonDynamoDB    | 2021-02-26 |       0 |
+| AmazonDynamoDB    | 2021-02-27 |       0 |
+| AmazonDynamoDB    | 2021-02-28 |       0 |
+| AmazonDynamoDB    | 2021-03-01 |       0 |
+| AmazonEC2         | 2021-02-02 |    0.01 |
+| AmazonEC2         | 2021-02-03 |    0.01 |
+| AmazonEC2         | 2021-02-04 |    0.01 |
+| AmazonEC2         | 2021-02-05 |    0.01 |
+| AmazonEC2         | 2021-02-06 |    0.01 |
+| AmazonEC2         | 2021-02-07 |    0.01 |
+| AmazonEC2         | 2021-02-08 |    0.01 |
+| AmazonEC2         | 2021-02-09 |    0.01 |
+| AmazonEC2         | 2021-02-10 |    0.01 |
+| AmazonEC2         | 2021-02-11 |    0.01 |
+| AmazonEC2         | 2021-02-12 |    0.01 |
+| AmazonEC2         | 2021-02-13 |    0.01 |
+| AmazonEC2         | 2021-02-14 |    0.01 |
+| AmazonEC2         | 2021-02-15 |    0.01 |
+| AmazonEC2         | 2021-02-16 |    0.01 |
+| AmazonEC2         | 2021-02-17 |    0.01 |
+| AmazonEC2         | 2021-02-18 |    0.01 |
+| AmazonEC2         | 2021-02-19 |    0.01 |
+| AmazonEC2         | 2021-02-20 |    0.01 |
+| AmazonEC2         | 2021-02-21 |    0.01 |
+| AmazonEC2         | 2021-02-22 |    0.01 |
+| AmazonEC2         | 2021-02-23 |    0.01 |
+| AmazonEC2         | 2021-02-24 |    0.01 |
+| AmazonEC2         | 2021-02-25 |    0.01 |
+| AmazonEC2         | 2021-02-26 |    0.01 |
+| AmazonEC2         | 2021-02-27 |    0.01 |
+| AmazonEC2         | 2021-02-28 |    0.01 |
+| AmazonEC2         | 2021-03-01 |    0.06 |
+| AmazonECR         | 2021-02-01 |       0 |
+| AmazonECR         | 2021-02-02 |       0 |
+| AmazonECR         | 2021-02-03 |       0 |
+| AmazonECR         | 2021-02-04 |       0 |
+| AmazonECR         | 2021-02-05 |       0 |
+| AmazonECR         | 2021-02-06 |       0 |
+| AmazonECR         | 2021-02-07 |       0 |
+| AmazonECR         | 2021-02-08 |       0 |
+| AmazonECR         | 2021-02-09 |       0 |
+| AmazonECR         | 2021-02-10 |       0 |
+| AmazonECR         | 2021-02-11 |       0 |
+| AmazonECR         | 2021-02-12 |       0 |
+| AmazonECR         | 2021-02-13 |       0 |
+| AmazonECR         | 2021-02-14 |       0 |
+| AmazonECR         | 2021-02-15 |       0 |
+| AmazonECR         | 2021-02-16 |       0 |
+| AmazonECR         | 2021-02-17 |       0 |
+| AmazonECR         | 2021-02-18 |       0 |
+| AmazonECR         | 2021-02-19 |       0 |
+| AmazonECR         | 2021-02-20 |       0 |
+| AmazonECR         | 2021-02-21 |       0 |
+| AmazonECR         | 2021-02-22 |       0 |
+| AmazonECR         | 2021-02-23 |       0 |
+| AmazonECR         | 2021-02-24 |       0 |
+| AmazonECR         | 2021-02-25 |       0 |
+| AmazonECR         | 2021-02-26 |       0 |
+| AmazonECR         | 2021-02-27 |       0 |
+| AmazonECR         | 2021-02-28 |       0 |
+| AmazonECR         | 2021-03-01 |       0 |
+| AmazonRoute53     | 2021-02-01 |       1 |
+| AmazonRoute53     | 2021-02-02 |       0 |
+| AmazonRoute53     | 2021-02-03 |       0 |
+| AmazonRoute53     | 2021-02-04 |       0 |
+| AmazonRoute53     | 2021-02-05 |       0 |
+| AmazonRoute53     | 2021-02-06 |       0 |
+| AmazonRoute53     | 2021-02-07 |       0 |
+| AmazonRoute53     | 2021-02-08 |       0 |
+| AmazonRoute53     | 2021-02-09 |       0 |
+| AmazonRoute53     | 2021-02-10 |       0 |
+| AmazonRoute53     | 2021-02-11 |       0 |
+| AmazonRoute53     | 2021-02-12 |       0 |
+| AmazonRoute53     | 2021-02-13 |       0 |
+| AmazonRoute53     | 2021-02-14 |       0 |
+| AmazonRoute53     | 2021-02-15 |       0 |
+| AmazonRoute53     | 2021-02-16 |       0 |
+| AmazonRoute53     | 2021-02-17 |       0 |
+| AmazonRoute53     | 2021-02-18 |       0 |
+| AmazonRoute53     | 2021-02-19 |       0 |
+| AmazonRoute53     | 2021-02-20 |       0 |
+| AmazonRoute53     | 2021-02-21 |       0 |
+| AmazonRoute53     | 2021-02-22 |       0 |
+| AmazonRoute53     | 2021-02-23 |       0 |
+| AmazonRoute53     | 2021-02-24 |       0 |
+| AmazonRoute53     | 2021-02-25 |       0 |
+| AmazonRoute53     | 2021-02-26 |       0 |
+| AmazonRoute53     | 2021-02-27 |       0 |
+| AmazonRoute53     | 2021-02-28 |       0 |
+| AmazonRoute53     | 2021-03-01 |    0.14 |
+| AmazonS3          | 2021-02-01 |    0.13 |
+| AmazonS3          | 2021-02-02 |    0.13 |
+| AmazonS3          | 2021-02-03 |    0.13 |
+| AmazonS3          | 2021-02-04 |    0.13 |
+| AmazonS3          | 2021-02-05 |    0.13 |
+| AmazonS3          | 2021-02-06 |    0.13 |
+| AmazonS3          | 2021-02-07 |    0.13 |
+| AmazonS3          | 2021-02-08 |    0.13 |
+| AmazonS3          | 2021-02-09 |    0.13 |
+| AmazonS3          | 2021-02-10 |    0.13 |
+| AmazonS3          | 2021-02-11 |    0.13 |
+| AmazonS3          | 2021-02-12 |    0.13 |
+| AmazonS3          | 2021-02-13 |    0.13 |
+| AmazonS3          | 2021-02-14 |    0.13 |
+| AmazonS3          | 2021-02-15 |    0.13 |
+| AmazonS3          | 2021-02-16 |    0.13 |
+| AmazonS3          | 2021-02-17 |    0.13 |
+| AmazonS3          | 2021-02-18 |    0.13 |
+| AmazonS3          | 2021-02-19 |    0.13 |
+| AmazonS3          | 2021-02-20 |    0.13 |
+| AmazonS3          | 2021-02-21 |    0.13 |
+| AmazonS3          | 2021-02-22 |    0.13 |
+| AmazonS3          | 2021-02-23 |    0.13 |
+| AmazonS3          | 2021-02-24 |    0.13 |
+| AmazonS3          | 2021-02-25 |    0.13 |
+| AmazonS3          | 2021-02-26 |    0.13 |
+| AmazonS3          | 2021-02-27 |    0.13 |
+| AmazonS3          | 2021-02-28 |    0.13 |
+| AmazonS3          | 2021-03-01 |     0.5 |
++-------------------+------------+---------+
+
+SUBTOTAL PER PRODUCT AND USAGE TYPE
+===================================
++-------------------+---------------------------------+----------------+----------------+
+| PRODUCT_CODE      | USAGE_TYPE                      |   USAGE_AMOUNT |   BLENDED_COST |
+|-------------------+---------------------------------+----------------+----------------|
+| AWSGlue           | USE1-Catalog-Storage            |              1 |              0 |
+| AWSSecretsManager | USE1-AWSSecretsManager-Secrets  |              1 |            0.4 |
+| AmazonCloudFront  | CA-DataTransfer-Out-Bytes       |              0 |              0 |
+| AmazonCloudFront  | CA-Requests-Tier1               |              1 |              0 |
+| AmazonCloudFront  | CA-Requests-Tier2-HTTPS         |              1 |              0 |
+| AmazonCloudFront  | EU-DataTransfer-Out-Bytes       |              0 |              0 |
+| AmazonCloudFront  | EU-DataTransfer-Out-OBytes      |              0 |              0 |
+| AmazonCloudFront  | EU-Requests-HTTP-Proxy          |              1 |              0 |
+| AmazonCloudFront  | EU-Requests-Tier1               |              4 |              0 |
+| AmazonCloudFront  | EU-Requests-Tier2-HTTPS         |            150 |              0 |
+| AmazonCloudFront  | JP-DataTransfer-Out-Bytes       |              0 |              0 |
+| AmazonCloudFront  | JP-Requests-Tier1               |             23 |              0 |
+| AmazonCloudFront  | JP-Requests-Tier2-HTTPS         |             55 |              0 |
+| AmazonCloudFront  | SA-DataTransfer-Out-Bytes       |              0 |              0 |
+| AmazonCloudFront  | SA-Requests-Tier1               |             40 |              0 |
+| AmazonCloudFront  | SA-Requests-Tier2-HTTPS         |             38 |              0 |
+| AmazonCloudFront  | US-DataTransfer-Out-Bytes       |           0.01 |              0 |
+| AmazonCloudFront  | US-Requests-Tier1               |             26 |              0 |
+| AmazonCloudFront  | US-Requests-Tier2-HTTPS         |            192 |              0 |
+| AmazonCloudWatch  | CW:AlarmMonitorUsage            |           4.99 |            0.3 |
+| AmazonCloudWatch  | CW:Requests                     |              6 |              0 |
+| AmazonCloudWatch  | SAE1-CW:AlarmMonitorUsage       |           7.99 |              0 |
+| AmazonCloudWatch  | SAE1-TimedStorage-ByteHrs       |              0 |              0 |
+| AmazonCloudWatch  | USE1-TimedStorage-ByteHrs       |              0 |              0 |
+| AmazonDynamoDB    | ReadCapacityUnit-Hrs            |           1344 |              0 |
+| AmazonDynamoDB    | SAE1-ReadCapacityUnit-Hrs       |           2688 |              0 |
+| AmazonDynamoDB    | SAE1-TimedStorage-ByteHrs       |              0 |              0 |
+| AmazonDynamoDB    | SAE1-WriteCapacityUnit-Hrs      |           2688 |              0 |
+| AmazonDynamoDB    | TimedStorage-ByteHrs            |              0 |              0 |
+| AmazonDynamoDB    | USE1-TimedBackupStorage-ByteHrs |           0.01 |              0 |
+| AmazonDynamoDB    | WriteCapacityUnit-Hrs           |           1344 |              0 |
+| AmazonEC2         | EBS:SnapshotUsage               |           4.73 |           0.24 |
+| AmazonEC2         | USE2-EBS:SnapshotUsage          |           2.85 |           0.14 |
+| AmazonECR         | TimedStorage-ByteHrs            |           0.05 |              0 |
+| AmazonRoute53     | DNS-Queries                     |           2329 |              0 |
+| AmazonRoute53     | HostedZone                      |              2 |              1 |
+| AmazonRoute53     | Intra-AWS-DNS-Queries           |            734 |              0 |
+| AmazonS3          | Inventory-ObjectsListed         |         157432 |              0 |
+| AmazonS3          | Monitoring-Automation-INT       |          39358 |            0.1 |
+| AmazonS3          | Requests-Tier1                  |            216 |              0 |
+| AmazonS3          | Requests-Tier2                  |            267 |              0 |
+| AmazonS3          | SAE1-DataTransfer-Out-Bytes     |              0 |              0 |
+| AmazonS3          | SAE1-Requests-Tier1             |              1 |              0 |
+| AmazonS3          | SAE1-Requests-Tier2             |             41 |              0 |
+| AmazonS3          | SAE1-TimedStorage-ByteHrs       |           0.01 |              0 |
+| AmazonS3          | SAE1-USE1-AWS-Out-Bytes         |              0 |              0 |
+| AmazonS3          | SAE1-USW2-AWS-Out-Bytes         |              0 |              0 |
+| AmazonS3          | StorageAnalytics-ObjCount       |          39358 |              0 |
+| AmazonS3          | TagStorage-TagHrs               |              2 |              0 |
+| AmazonS3          | TimedStorage-ByteHrs            |           1.49 |           0.03 |
+| AmazonS3          | TimedStorage-INT-FA-ByteHrs     |           0.04 |              0 |
+| AmazonS3          | TimedStorage-INT-IA-ByteHrs     |         272.71 |           3.41 |
+| AmazonS3          | TimedStorage-SIA-SmObjects      |              0 |              0 |
+| AmazonS3          | USE1-CloudFront-Out-Bytes       |           0.01 |              0 |
++-------------------+---------------------------------+----------------+----------------+
+
+SUBTOTAL PER PRODUCT AND OPERATION
+==================================
++-------------------+----------------------------------+----------------+----------------+
+| PRODUCT_CODE      | USAGE_TYPE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|-------------------+----------------------------------+----------------+----------------|
+| AWSGlue           | Storage                          |              1 |              0 |
+| AWSSecretsManager | SecretUsage                      |              1 |            0.4 |
+| AmazonCloudFront  | GET                              |         496.02 |              0 |
+| AmazonCloudFront  | HEAD                             |             34 |              0 |
+| AmazonCloudFront  | POST                             |              1 |              0 |
+| AmazonCloudWatch  | GetMetricStatistics              |              3 |              0 |
+| AmazonCloudWatch  | HourlyStorageMetering            |              0 |              0 |
+| AmazonCloudWatch  | ListMetrics                      |              3 |              0 |
+| AmazonCloudWatch  | Unknown                          |          12.98 |            0.3 |
+| AmazonDynamoDB    | BackupStorage                    |           0.01 |              0 |
+| AmazonDynamoDB    | CommittedThroughput              |           8064 |              0 |
+| AmazonDynamoDB    | StandardStorage                  |              0 |              0 |
+| AmazonEC2         | CreateSnapshot                   |           7.58 |           0.38 |
+| AmazonECR         | TimedStorage-ByteHrs             |           0.05 |              0 |
+| AmazonRoute53     | A                                |            998 |              0 |
+| AmazonRoute53     | AAAA                             |            460 |              0 |
+| AmazonRoute53     | CAA                              |             45 |              0 |
+| AmazonRoute53     | CNAME                            |             35 |              0 |
+| AmazonRoute53     | DNSKEY                           |            143 |              0 |
+| AmazonRoute53     | HostedZone                       |              2 |              1 |
+| AmazonRoute53     | MX                               |            231 |              0 |
+| AmazonRoute53     | NS                               |            320 |              0 |
+| AmazonRoute53     | SOA                              |            343 |              0 |
+| AmazonRoute53     | SRV                              |              3 |              0 |
+| AmazonRoute53     | TXT                              |            444 |              0 |
+| AmazonRoute53     | UNSUPPORTED                      |             41 |              0 |
+| AmazonS3          | CopyObject                       |             23 |              0 |
+| AmazonS3          | GetObject                        |              4 |              0 |
+| AmazonS3          | HeadBucket                       |              6 |              0 |
+| AmazonS3          | IntelligentTieringFAStorage      |           0.04 |              0 |
+| AmazonS3          | IntelligentTieringIAStorage      |         272.71 |           3.41 |
+| AmazonS3          | IntelligentTieringStorage        |          39358 |            0.1 |
+| AmazonS3          | Inventory                        |         157432 |              0 |
+| AmazonS3          | ListAllMyBuckets                 |              1 |              0 |
+| AmazonS3          | ListBucket                       |              1 |              0 |
+| AmazonS3          | ObjectTagCount                   |              2 |              0 |
+| AmazonS3          | PutObject                        |            192 |              0 |
+| AmazonS3          | S3.STORAGE_CLASS_ANALYSIS.OBJECT |          39358 |              0 |
+| AmazonS3          | StandardIASizeOverhead           |              0 |              0 |
+| AmazonS3          | StandardStorage                  |            1.5 |           0.03 |
+| AmazonS3          | WebsiteGetObject                 |         280.01 |              0 |
+| AmazonS3          | WebsiteHeadObject                |             18 |              0 |
++-------------------+----------------------------------+----------------+----------------+

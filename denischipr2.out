@@ -1,0 +1,446 @@
+['report/billing_report/20210301-20210401/20210315T141132Z/billing_report-00001.csv', 'report/billing_report/20210301-20210401/20210315T141132Z/billing_report-Manifest.json']
+
+PERIODO
+=======
++--------------+--------------+---------------+-------------+---------+
+|   ACCOUNT_ID | INVOICE_ID   | USAGE_START   | USAGE_END   |   TOTAL |
+|--------------+--------------+---------------+-------------+---------|
+| 497214940234 |              | 2021-03-01    | 2021-04-01  |  133.54 |
++--------------+--------------+---------------+-------------+---------+
+
+TYPE BREAKDOWN
+==============
++-----------------+----------------+----------------+
+| ITEM_TYPE       |   USAGE_AMOUNT |   BLENDED_COST |
+|-----------------+----------------+----------------|
+| DiscountedUsage |             37 |              0 |
+| RIFee           |         437.52 |          46.82 |
+| Tax             |             10 |          16.24 |
+| Usage           |        10432.2 |          70.49 |
++-----------------+----------------+----------------+
+
+SERVICES
+========
++-------------------+----------------+----------------+
+| PRODUCT_CODE      |   USAGE_AMOUNT |   BLENDED_COST |
+|-------------------+----------------+----------------|
+| AWSELB            |          39.24 |           0.88 |
+| AWSQueueService   |              2 |              0 |
+| AWSSecretsManager |              1 |              0 |
+| AmazonEC2         |         676.17 |          62.83 |
+| AmazonRDS         |         312.76 |           5.77 |
+| AmazonRoute53     |           7492 |              1 |
+| AmazonS3          |        1886.07 |              0 |
+| AmazonSNS         |              2 |              0 |
+| awskms            |             21 |              0 |
++-------------------+----------------+----------------+
+
+RESERVED INSTANCE
+=================
++---------------------------+----------------+----------------+
+| USAGE_TYPE                |   USAGE_AMOUNT |   BLENDED_COST |
+|---------------------------+----------------+----------------|
+| USW2-HeavyUsage:c5.xlarge |         437.52 |          46.82 |
++---------------------------+----------------+----------------+
+
+USAGE
+=====
++----------------------------------+----------------+----------------+
+| USAGE_TYPE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|----------------------------------+----------------+----------------|
+| DNS-Queries                      |           6964 |              0 |
+| DataTransfer-Out-Bytes           |              0 |              0 |
+| HostedZone                       |              2 |              1 |
+| Intra-AWS-DNS-Queries            |            526 |              0 |
+| Requests-Tier1                   |             80 |              0 |
+| Requests-Tier2                   |             47 |              0 |
+| USE1-SAE1-AWS-Out-Bytes          |              0 |              0 |
+| USE1-USW2-AWS-Out-Bytes          |              0 |              0 |
+| USW2-APE1-AWS-In-Bytes           |              0 |              0 |
+| USW2-APE1-AWS-Out-Bytes          |              0 |              0 |
+| USW2-APN1-AWS-In-Bytes           |              0 |              0 |
+| USW2-APN1-AWS-Out-Bytes          |              0 |              0 |
+| USW2-APS1-AWS-In-Bytes           |              0 |              0 |
+| USW2-APS1-AWS-Out-Bytes          |              0 |              0 |
+| USW2-APS2-AWS-In-Bytes           |              0 |              0 |
+| USW2-APS2-AWS-Out-Bytes          |              0 |              0 |
+| USW2-APS3-AWS-In-Bytes           |              0 |              0 |
+| USW2-APS3-AWS-Out-Bytes          |              0 |              0 |
+| USW2-AWSSecretsManagerAPIRequest |              1 |              0 |
+| USW2-BoxUsage:c4.xlarge          |         304.48 |          60.59 |
+| USW2-BoxUsage:c5.xlarge          |           1.53 |           0.26 |
+| USW2-CloudFront-In-Bytes         |              0 |              0 |
+| USW2-CloudFront-Out-Bytes        |              0 |              0 |
+| USW2-DataTransfer-In-Bytes       |           0.21 |              0 |
+| USW2-DataTransfer-Out-Bytes      |           0.69 |              0 |
+| USW2-DataTransfer-Regional-Bytes |            0.1 |              0 |
+| USW2-EBS:SnapshotUsage           |          12.59 |           0.63 |
+| USW2-EBS:VolumeUsage.gp2         |          13.51 |           1.35 |
+| USW2-EBSOptimized:c4.xlarge      |         304.48 |              0 |
+| USW2-EBSOptimized:c5.xlarge      |          38.53 |              0 |
+| USW2-EU-AWS-In-Bytes             |              0 |              0 |
+| USW2-EU-AWS-Out-Bytes            |              0 |              0 |
+| USW2-EUC1-AWS-In-Bytes           |              0 |              0 |
+| USW2-EUC1-AWS-Out-Bytes          |              0 |              0 |
+| USW2-EUW2-AWS-In-Bytes           |              0 |              0 |
+| USW2-EUW2-AWS-Out-Bytes          |              0 |              0 |
+| USW2-EUW3-AWS-In-Bytes           |              0 |              0 |
+| USW2-EUW3-AWS-Out-Bytes          |              0 |              0 |
+| USW2-ElasticIP:IdleAddress       |            0.2 |              0 |
+| USW2-InstanceUsage:db.t2.micro   |         308.14 |           5.24 |
+| USW2-LCUUsage                    |           0.14 |              0 |
+| USW2-LoadBalancerUsage           |             39 |           0.88 |
+| USW2-RDS:GP2-Storage             |           4.61 |           0.53 |
+| USW2-Requests-Tier1              |            576 |              0 |
+| USW2-Requests-Tier2              |           1187 |              0 |
+| USW2-TimedStorage-ByteHrs        |           0.04 |              0 |
+| USW2-USE1-AWS-In-Bytes           |              0 |              0 |
+| USW2-USE1-AWS-Out-Bytes          |              0 |              0 |
+| USW2-USE2-AWS-In-Bytes           |              0 |              0 |
+| USW2-USE2-AWS-Out-Bytes          |              0 |              0 |
+| USW2-USW1-AWS-In-Bytes           |              0 |              0 |
+| USW2-USW1-AWS-Out-Bytes          |              0 |              0 |
+| us-east-1-KMS-Requests           |              2 |              0 |
+| us-west-2-KMS-Requests           |             19 |              0 |
++----------------------------------+----------------+----------------+
+
+RESERVED INSTANCE - OPERATIONS
+==============================
++--------------+----------------+----------------+
+| USAGE_TYPE   |   USAGE_AMOUNT |   BLENDED_COST |
+|--------------+----------------+----------------|
+| RunInstances |         437.52 |          46.82 |
++--------------+----------------+----------------+
+
+USAGE - OPERATIONS
+==================
++---------------------------------+----------------+----------------+
+| USAGE_TYPE                      |   USAGE_AMOUNT |   BLENDED_COST |
+|---------------------------------+----------------+----------------|
+| A                               |           5496 |              0 |
+| AAAA                            |            888 |              0 |
+| ANY                             |             27 |              0 |
+| AssociateAddressVPC             |            0.2 |              0 |
+| CAA                             |             39 |              0 |
+| CNAME                           |             96 |              0 |
+| CompleteMultipartUpload         |              8 |              0 |
+| CopyObject                      |             35 |              0 |
+| CreateBucket                    |              1 |              0 |
+| CreateDBInstance                |           4.61 |           0.53 |
+| CreateDBInstance:0002           |         308.14 |           5.24 |
+| CreateGrant                     |              6 |              0 |
+| CreateSnapshot                  |          12.59 |           0.63 |
+| CreateVolume-Gp2                |          13.51 |           1.35 |
+| DNSKEY                          |            164 |              0 |
+| DS                              |              6 |              0 |
+| DescribeKey                     |              6 |              0 |
+| GetObject                       |         483.03 |              0 |
+| HeadBucket                      |             52 |              0 |
+| HeadObject                      |            410 |              0 |
+| HostedZone                      |              2 |              1 |
+| Hourly                          |            343 |              0 |
+| InitiateMultipartUpload         |             14 |              0 |
+| InterZone-In                    |              0 |              0 |
+| InterZone-Out                   |              0 |              0 |
+| List                            |              2 |              0 |
+| ListAliases                     |              9 |              0 |
+| ListAllMyBuckets                |             25 |              0 |
+| ListBucket                      |            211 |              0 |
+| ListBucketVersions              |             26 |              0 |
+| ListSecrets                     |              1 |              0 |
+| ListSubscriptions               |              1 |              0 |
+| ListTopics                      |              1 |              0 |
+| LoadBalancing                   |            0.1 |              0 |
+| LoadBalancing-PublicIP-In       |              0 |              0 |
+| LoadBalancing-PublicIP-Out      |              0 |              0 |
+| LoadBalancing:Application       |          39.14 |           0.88 |
+| MX                              |            171 |              0 |
+| NS                              |            228 |              0 |
+| Not Applicable                  |           0.01 |              0 |
+| PTR                             |              5 |              0 |
+| PublicIP-In                     |            0.1 |              0 |
+| PublicIP-Out                    |              0 |              0 |
+| PutObject                       |            281 |              0 |
+| ReadACL                         |             36 |              0 |
+| ReadAccelerate                  |              1 |              0 |
+| ReadAccountPublicAccessBlock    |             31 |              0 |
+| ReadBucketCors                  |              2 |              0 |
+| ReadBucketIntelligentTiering    |              1 |              0 |
+| ReadBucketObjectLockConfig      |             11 |              0 |
+| ReadBucketOwnershipControls     |              2 |              0 |
+| ReadBucketPolicy                |             32 |              0 |
+| ReadBucketPolicyStatus          |             30 |              0 |
+| ReadBucketPublicAccessBlock     |             37 |              0 |
+| ReadBucketServerSideEncryption  |              2 |              0 |
+| ReadBucketWebsite               |             27 |              0 |
+| ReadCostAllocation              |              2 |              0 |
+| ReadLocation                    |              2 |              0 |
+| ReadLogProps                    |              1 |              0 |
+| ReadNotificationProps           |              1 |              0 |
+| ReadObjectTagging               |              7 |              0 |
+| ReadRequestPaymentProps         |              1 |              0 |
+| ReadVersioningProps             |             63 |              0 |
+| RunInstances                    |         306.77 |          60.85 |
+| SOA                             |            161 |              0 |
+| SRV                             |             13 |              0 |
+| StandardStorage                 |           0.04 |              0 |
+| TXT                             |            191 |              0 |
+| UNSUPPORTED                     |              5 |              0 |
+| UploadPart                      |             49 |              0 |
+| WriteBucketPolicy               |              1 |              0 |
+| WriteBucketServerSideEncryption |              1 |              0 |
++---------------------------------+----------------+----------------+
+
+DAILY COSTS PER SERVICE
+=======================
++-------------------+------------+---------+
+| PRODUCT_CODE      | DATE       |   TOTAL |
+|-------------------+------------+---------|
+| AWSDataTransfer   | 2021-04-01 |       0 |
+| AWSELB            | 2021-03-13 |       0 |
+| AWSELB            | 2021-03-14 |    0.16 |
+| AWSELB            | 2021-03-15 |    0.72 |
+| AWSELB            | 2021-04-01 |    0.13 |
+| AWSQueueService   | 2021-03-13 |       0 |
+| AWSQueueService   | 2021-04-01 |       0 |
+| AWSSecretsManager | 2021-03-13 |       0 |
+| AWSSecretsManager | 2021-04-01 |       0 |
+| AmazonEC2         | 2021-03-01 |       0 |
+| AmazonEC2         | 2021-03-02 |    4.92 |
+| AmazonEC2         | 2021-03-03 |    4.92 |
+| AmazonEC2         | 2021-03-04 |    4.92 |
+| AmazonEC2         | 2021-03-05 |    4.92 |
+| AmazonEC2         | 2021-03-06 |    4.92 |
+| AmazonEC2         | 2021-03-07 |    4.92 |
+| AmazonEC2         | 2021-03-08 |    4.92 |
+| AmazonEC2         | 2021-03-09 |    4.92 |
+| AmazonEC2         | 2021-03-10 |    4.92 |
+| AmazonEC2         | 2021-03-11 |    4.92 |
+| AmazonEC2         | 2021-03-12 |    4.92 |
+| AmazonEC2         | 2021-03-13 |    8.46 |
+| AmazonEC2         | 2021-03-14 |    0.24 |
+| AmazonEC2         | 2021-03-15 |       0 |
+| AmazonEC2         | 2021-03-31 |   46.82 |
+| AmazonEC2         | 2021-04-01 |   15.17 |
+| AmazonRDS         | 2021-03-01 |       0 |
+| AmazonRDS         | 2021-03-02 |    0.45 |
+| AmazonRDS         | 2021-03-03 |    0.45 |
+| AmazonRDS         | 2021-03-04 |    0.45 |
+| AmazonRDS         | 2021-03-05 |    0.45 |
+| AmazonRDS         | 2021-03-06 |    0.45 |
+| AmazonRDS         | 2021-03-07 |    0.45 |
+| AmazonRDS         | 2021-03-08 |    0.45 |
+| AmazonRDS         | 2021-03-09 |    0.45 |
+| AmazonRDS         | 2021-03-10 |    0.45 |
+| AmazonRDS         | 2021-03-11 |    0.45 |
+| AmazonRDS         | 2021-03-12 |    0.45 |
+| AmazonRDS         | 2021-03-13 |    0.79 |
+| AmazonRDS         | 2021-03-14 |    0.04 |
+| AmazonRDS         | 2021-03-15 |    0.05 |
+| AmazonRDS         | 2021-04-01 |     0.8 |
+| AmazonRoute53     | 2021-03-01 |       1 |
+| AmazonRoute53     | 2021-03-02 |       0 |
+| AmazonRoute53     | 2021-03-03 |       0 |
+| AmazonRoute53     | 2021-03-04 |       0 |
+| AmazonRoute53     | 2021-03-05 |       0 |
+| AmazonRoute53     | 2021-03-06 |       0 |
+| AmazonRoute53     | 2021-03-07 |       0 |
+| AmazonRoute53     | 2021-03-08 |       0 |
+| AmazonRoute53     | 2021-03-09 |       0 |
+| AmazonRoute53     | 2021-03-10 |       0 |
+| AmazonRoute53     | 2021-03-11 |       0 |
+| AmazonRoute53     | 2021-03-12 |       0 |
+| AmazonRoute53     | 2021-03-13 |       0 |
+| AmazonRoute53     | 2021-03-14 |       0 |
+| AmazonRoute53     | 2021-03-15 |       0 |
+| AmazonRoute53     | 2021-04-01 |    0.14 |
+| AmazonS3          | 2021-03-01 |       0 |
+| AmazonS3          | 2021-03-02 |       0 |
+| AmazonS3          | 2021-03-03 |       0 |
+| AmazonS3          | 2021-03-04 |       0 |
+| AmazonS3          | 2021-03-05 |       0 |
+| AmazonS3          | 2021-03-06 |       0 |
+| AmazonS3          | 2021-03-07 |       0 |
+| AmazonS3          | 2021-03-08 |       0 |
+| AmazonS3          | 2021-03-09 |       0 |
+| AmazonS3          | 2021-03-10 |       0 |
+| AmazonS3          | 2021-03-11 |       0 |
+| AmazonS3          | 2021-03-12 |       0 |
+| AmazonS3          | 2021-03-13 |       0 |
+| AmazonS3          | 2021-03-14 |       0 |
+| AmazonS3          | 2021-03-15 |       0 |
+| AmazonS3          | 2021-04-01 |       0 |
+| AmazonSNS         | 2021-03-13 |       0 |
+| AmazonSNS         | 2021-04-01 |       0 |
+| awskms            | 2021-03-13 |       0 |
+| awskms            | 2021-04-01 |       0 |
++-------------------+------------+---------+
+
+SUBTOTAL PER PRODUCT AND USAGE TYPE
+===================================
++-------------------+----------------------------------+----------------+----------------+
+| PRODUCT_CODE      | USAGE_TYPE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|-------------------+----------------------------------+----------------+----------------|
+| AWSELB            | USW2-APS1-AWS-In-Bytes           |              0 |              0 |
+| AWSELB            | USW2-APS1-AWS-Out-Bytes          |              0 |              0 |
+| AWSELB            | USW2-APS2-AWS-In-Bytes           |              0 |              0 |
+| AWSELB            | USW2-APS2-AWS-Out-Bytes          |              0 |              0 |
+| AWSELB            | USW2-DataTransfer-In-Bytes       |              0 |              0 |
+| AWSELB            | USW2-DataTransfer-Out-Bytes      |            0.1 |              0 |
+| AWSELB            | USW2-DataTransfer-Regional-Bytes |              0 |              0 |
+| AWSELB            | USW2-LCUUsage                    |           0.14 |              0 |
+| AWSELB            | USW2-LoadBalancerUsage           |             39 |           0.88 |
+| AWSELB            | USW2-USE1-AWS-In-Bytes           |              0 |              0 |
+| AWSELB            | USW2-USE1-AWS-Out-Bytes          |              0 |              0 |
+| AWSELB            | USW2-USE2-AWS-In-Bytes           |              0 |              0 |
+| AWSELB            | USW2-USE2-AWS-Out-Bytes          |              0 |              0 |
+| AWSQueueService   | USW2-Requests-Tier1              |              2 |              0 |
+| AWSSecretsManager | USW2-AWSSecretsManagerAPIRequest |              1 |              0 |
+| AmazonEC2         | USW2-APE1-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-APE1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-APN1-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-APN1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-APS1-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-APS1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-APS2-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-APS2-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-APS3-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-APS3-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-BoxUsage:c4.xlarge          |         304.48 |          60.59 |
+| AmazonEC2         | USW2-BoxUsage:c5.xlarge          |           1.53 |           0.26 |
+| AmazonEC2         | USW2-CloudFront-In-Bytes         |              0 |              0 |
+| AmazonEC2         | USW2-CloudFront-Out-Bytes        |              0 |              0 |
+| AmazonEC2         | USW2-DataTransfer-In-Bytes       |            0.2 |              0 |
+| AmazonEC2         | USW2-DataTransfer-Out-Bytes      |           0.56 |              0 |
+| AmazonEC2         | USW2-DataTransfer-Regional-Bytes |            0.1 |              0 |
+| AmazonEC2         | USW2-EBS:SnapshotUsage           |          12.59 |           0.63 |
+| AmazonEC2         | USW2-EBS:VolumeUsage.gp2         |          13.51 |           1.35 |
+| AmazonEC2         | USW2-EBSOptimized:c4.xlarge      |         304.48 |              0 |
+| AmazonEC2         | USW2-EBSOptimized:c5.xlarge      |          38.53 |              0 |
+| AmazonEC2         | USW2-EU-AWS-In-Bytes             |              0 |              0 |
+| AmazonEC2         | USW2-EU-AWS-Out-Bytes            |              0 |              0 |
+| AmazonEC2         | USW2-EUC1-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-EUC1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-EUW2-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-EUW2-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-EUW3-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-EUW3-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-ElasticIP:IdleAddress       |            0.2 |              0 |
+| AmazonEC2         | USW2-USE1-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-USE1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-USE2-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-USE2-AWS-Out-Bytes          |              0 |              0 |
+| AmazonEC2         | USW2-USW1-AWS-In-Bytes           |              0 |              0 |
+| AmazonEC2         | USW2-USW1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonRDS         | USW2-APE1-AWS-In-Bytes           |              0 |              0 |
+| AmazonRDS         | USW2-APN1-AWS-In-Bytes           |              0 |              0 |
+| AmazonRDS         | USW2-APS1-AWS-In-Bytes           |              0 |              0 |
+| AmazonRDS         | USW2-APS2-AWS-In-Bytes           |              0 |              0 |
+| AmazonRDS         | USW2-APS3-AWS-In-Bytes           |              0 |              0 |
+| AmazonRDS         | USW2-DataTransfer-In-Bytes       |              0 |              0 |
+| AmazonRDS         | USW2-DataTransfer-Out-Bytes      |              0 |              0 |
+| AmazonRDS         | USW2-EU-AWS-In-Bytes             |              0 |              0 |
+| AmazonRDS         | USW2-EUC1-AWS-In-Bytes           |              0 |              0 |
+| AmazonRDS         | USW2-EUW3-AWS-In-Bytes           |              0 |              0 |
+| AmazonRDS         | USW2-InstanceUsage:db.t2.micro   |         308.14 |           5.24 |
+| AmazonRDS         | USW2-RDS:GP2-Storage             |           4.61 |           0.53 |
+| AmazonRDS         | USW2-USE1-AWS-In-Bytes           |              0 |              0 |
+| AmazonRDS         | USW2-USE1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonRDS         | USW2-USE2-AWS-In-Bytes           |              0 |              0 |
+| AmazonRoute53     | DNS-Queries                      |           6964 |              0 |
+| AmazonRoute53     | HostedZone                       |              2 |              1 |
+| AmazonRoute53     | Intra-AWS-DNS-Queries            |            526 |              0 |
+| AmazonS3          | DataTransfer-Out-Bytes           |              0 |              0 |
+| AmazonS3          | Requests-Tier1                   |             80 |              0 |
+| AmazonS3          | Requests-Tier2                   |             47 |              0 |
+| AmazonS3          | USE1-SAE1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonS3          | USE1-USW2-AWS-Out-Bytes          |              0 |              0 |
+| AmazonS3          | USW2-DataTransfer-Out-Bytes      |           0.03 |              0 |
+| AmazonS3          | USW2-Requests-Tier1              |            572 |              0 |
+| AmazonS3          | USW2-Requests-Tier2              |           1187 |              0 |
+| AmazonS3          | USW2-TimedStorage-ByteHrs        |           0.04 |              0 |
+| AmazonS3          | USW2-USE1-AWS-In-Bytes           |              0 |              0 |
+| AmazonS3          | USW2-USE1-AWS-Out-Bytes          |              0 |              0 |
+| AmazonSNS         | USW2-Requests-Tier1              |              2 |              0 |
+| awskms            | us-east-1-KMS-Requests           |              2 |              0 |
+| awskms            | us-west-2-KMS-Requests           |             19 |              0 |
++-------------------+----------------------------------+----------------+----------------+
+
+SUBTOTAL PER PRODUCT AND OPERATION
+==================================
++-------------------+---------------------------------+----------------+----------------+
+| PRODUCT_CODE      | USAGE_TYPE                      |   USAGE_AMOUNT |   BLENDED_COST |
+|-------------------+---------------------------------+----------------+----------------|
+| AWSELB            | LoadBalancing                   |            0.1 |              0 |
+| AWSELB            | LoadBalancing-PublicIP-In       |              0 |              0 |
+| AWSELB            | LoadBalancing-PublicIP-Out      |              0 |              0 |
+| AWSELB            | LoadBalancing:Application       |          39.14 |           0.88 |
+| AWSQueueService   | List                            |              2 |              0 |
+| AWSSecretsManager | ListSecrets                     |              1 |              0 |
+| AmazonEC2         | AssociateAddressVPC             |            0.2 |              0 |
+| AmazonEC2         | CreateSnapshot                  |          12.59 |           0.63 |
+| AmazonEC2         | CreateVolume-Gp2                |          13.51 |           1.35 |
+| AmazonEC2         | Hourly                          |            343 |              0 |
+| AmazonEC2         | InterZone-In                    |              0 |              0 |
+| AmazonEC2         | InterZone-Out                   |              0 |              0 |
+| AmazonEC2         | PublicIP-In                     |            0.1 |              0 |
+| AmazonEC2         | PublicIP-Out                    |              0 |              0 |
+| AmazonEC2         | RunInstances                    |         306.77 |          60.85 |
+| AmazonRDS         | CreateDBInstance                |           4.61 |           0.53 |
+| AmazonRDS         | CreateDBInstance:0002           |         308.14 |           5.24 |
+| AmazonRDS         | Not Applicable                  |           0.01 |              0 |
+| AmazonRoute53     | A                               |           5496 |              0 |
+| AmazonRoute53     | AAAA                            |            888 |              0 |
+| AmazonRoute53     | ANY                             |             27 |              0 |
+| AmazonRoute53     | CAA                             |             39 |              0 |
+| AmazonRoute53     | CNAME                           |             96 |              0 |
+| AmazonRoute53     | DNSKEY                          |            164 |              0 |
+| AmazonRoute53     | DS                              |              6 |              0 |
+| AmazonRoute53     | HostedZone                      |              2 |              1 |
+| AmazonRoute53     | MX                              |            171 |              0 |
+| AmazonRoute53     | NS                              |            228 |              0 |
+| AmazonRoute53     | PTR                             |              5 |              0 |
+| AmazonRoute53     | SOA                             |            161 |              0 |
+| AmazonRoute53     | SRV                             |             13 |              0 |
+| AmazonRoute53     | TXT                             |            191 |              0 |
+| AmazonRoute53     | UNSUPPORTED                     |              5 |              0 |
+| AmazonS3          | CompleteMultipartUpload         |              8 |              0 |
+| AmazonS3          | CopyObject                      |             35 |              0 |
+| AmazonS3          | CreateBucket                    |              1 |              0 |
+| AmazonS3          | GetObject                       |         483.03 |              0 |
+| AmazonS3          | HeadBucket                      |             52 |              0 |
+| AmazonS3          | HeadObject                      |            410 |              0 |
+| AmazonS3          | InitiateMultipartUpload         |             14 |              0 |
+| AmazonS3          | ListAllMyBuckets                |             25 |              0 |
+| AmazonS3          | ListBucket                      |            211 |              0 |
+| AmazonS3          | ListBucketVersions              |             26 |              0 |
+| AmazonS3          | PutObject                       |            281 |              0 |
+| AmazonS3          | ReadACL                         |             36 |              0 |
+| AmazonS3          | ReadAccelerate                  |              1 |              0 |
+| AmazonS3          | ReadAccountPublicAccessBlock    |             31 |              0 |
+| AmazonS3          | ReadBucketCors                  |              2 |              0 |
+| AmazonS3          | ReadBucketIntelligentTiering    |              1 |              0 |
+| AmazonS3          | ReadBucketObjectLockConfig      |             11 |              0 |
+| AmazonS3          | ReadBucketOwnershipControls     |              2 |              0 |
+| AmazonS3          | ReadBucketPolicy                |             32 |              0 |
+| AmazonS3          | ReadBucketPolicyStatus          |             30 |              0 |
+| AmazonS3          | ReadBucketPublicAccessBlock     |             37 |              0 |
+| AmazonS3          | ReadBucketServerSideEncryption  |              2 |              0 |
+| AmazonS3          | ReadBucketWebsite               |             27 |              0 |
+| AmazonS3          | ReadCostAllocation              |              2 |              0 |
+| AmazonS3          | ReadLocation                    |              2 |              0 |
+| AmazonS3          | ReadLogProps                    |              1 |              0 |
+| AmazonS3          | ReadNotificationProps           |              1 |              0 |
+| AmazonS3          | ReadObjectTagging               |              7 |              0 |
+| AmazonS3          | ReadRequestPaymentProps         |              1 |              0 |
+| AmazonS3          | ReadVersioningProps             |             63 |              0 |
+| AmazonS3          | StandardStorage                 |           0.04 |              0 |
+| AmazonS3          | UploadPart                      |             49 |              0 |
+| AmazonS3          | WriteBucketPolicy               |              1 |              0 |
+| AmazonS3          | WriteBucketServerSideEncryption |              1 |              0 |
+| AmazonSNS         | ListSubscriptions               |              1 |              0 |
+| AmazonSNS         | ListTopics                      |              1 |              0 |
+| awskms            | CreateGrant                     |              6 |              0 |
+| awskms            | DescribeKey                     |              6 |              0 |
+| awskms            | ListAliases                     |              9 |              0 |
++-------------------+---------------------------------+----------------+----------------+

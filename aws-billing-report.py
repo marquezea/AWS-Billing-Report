@@ -10,20 +10,26 @@ from decimal import Decimal
 from tabulate import tabulate
 from termgraph import termgraph as tg
 
-# # CONSTANTS
-# CACHE_PATH = './cache/'
-# BILLING_REPORT_BUCKET = 'amarquezelogs'
-# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210201-20210301/20210303T011135Z/'
-# PROFILE_NAME='pythonAutomation'
-
 # CONSTANTS
 CACHE_PATH = './cache/'
 PARAM_PROFILE = '--profile'
 PARAM_BUCKET = '--bucket'
 PARAM_BILLING_REPORT_PATH = '--billing-report-path'
+
+# BILLING_REPORT_BUCKET = 'amarquezelogs'
+# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210201-20210301/20210303T011135Z/'
+# PROFILE_NAME='pythonAutomation'
+# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20210201-20210301/ --profile pythonAutomation
+
 # BILLING_REPORT_BUCKET = 'backup-chipr-denis'
-# BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210313T184621Z/'
+# BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210315T141132Z/'
 # PROFILE_NAME='denischipr'
+# aws s3 ls s3://backup-chipr-denis/report/billing_report/20210301-20210401/ --profile denischipr
+
+# BILLING_REPORT_BUCKET = 'billing-report-chipr'
+# BILLING_REPORT_BUCKET_PATH = 'billing-report/billing-report-chipr/20210301-20210401/20210315T111629Z/'
+# PROFILE_NAME='chiprdev'
+# aws s3 ls s3://billing-report-chipr/billing-report/billing-report-chipr/20210301-20210401/ --profile chiprdev
 
 # GET COMMAND LINE ARGUMENTS
 def commandLineVerification():
@@ -129,7 +135,8 @@ def insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fil
         if (fileManifest['fileColumns'][extractColumnList[index]] == 'String'):
             convertedValue = '"' + columnValue + '"' 
         if (fileManifest['fileColumns'][extractColumnList[index]] == 'DateTime'):
-            convertedValue = '"' + columnValue.strftime('%Y-%m-%d') + '"' 
+            #print(columnValue, columnValue.strftime('%Y-%m-%d'), columnValue.strftime('%Y-%m-%d %H:%M:%S'))
+            convertedValue = '"' + columnValue.strftime('%Y-%m-%d %H:%M:%S') + '"' 
         if (fileManifest['fileColumns'][extractColumnList[index]] == 'BigDecimal'):
             convertedValue = str(columnValue)
         if ((index+1) == len(columnValues)):
@@ -141,7 +148,7 @@ def insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fil
     dbCursor.execute('COMMIT;')
 
 # QUERY DATABASE
-def queryDatabase(memoryDB, query,title):
+def queryDatabase(memoryDB, title, query):
     dbCursor = memoryDB.cursor()
     dbCursor.execute(query)
     result = dbCursor.fetchall()
@@ -255,14 +262,24 @@ if (commandLineResult['status']):
 
     memoryDb = createMemoryDatabase(extractColumnList, fileManifest)
     importCsvToDatabase(CACHE_PATH,downloadedFiles[0], memoryDb, extractColumnList, fileManifest)
-    queryDatabase(memoryDb, 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(lineItem_UsageStartDate) as USAGE_START, max(lineItem_UsageEndDate) as USAGE_END, round(sum(lineItem_BlendedCost),2) as TOTAL FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId', 'PERIODO')
-    queryDatabase(memoryDb, 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS GROUP BY lineItem_LineItemType', 'TYPE BREAKDOWN')
-    queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode', 'SERVICES')
-    queryDatabase(memoryDb, 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "RIFee" GROUP BY lineItem_UsageType', 'RESERVED INSTANCE')
-    queryDatabase(memoryDb, 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_UsageType', 'USAGE')
-    queryDatabase(memoryDb, 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "RIFee" GROUP BY lineItem_Operation', 'RESERVED INSTANCE - OPERATIONS')
-    queryDatabase(memoryDb, 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_Operation', 'USAGE - OPERATIONS')
-    queryDatabase(memoryDb, 'select lineItem_ProductCode AS PRODUCT_CODE, lineItem_UsageEndDate, round(sum(lineitem_blendedcost),2) as TOTAL from line_items group by lineItem_UsageEndDate, lineItem_ProductCode order by lineItem_ProductCode, lineItem_UsageEndDate', 'DAILY COSTS PER SERVICE')
-    queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_UsageType', 'USO')
-    queryDatabase(memoryDb, 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_Operation', 'OPERATION')
+    queryDatabase(memoryDb, 'PERIODO', 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)) as USAGE_START, max(strftime(\'%Y-%m-%d\', lineItem_UsageEndDate)) as USAGE_END, round(sum(lineItem_BlendedCost),2) as TOTAL \
+        FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId')
+    queryDatabase(memoryDb, 'TYPE BREAKDOWN', 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS GROUP BY lineItem_LineItemType', )
+    queryDatabase(memoryDb, 'SERVICES', 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode')
+    queryDatabase(memoryDb, 'RESERVED INSTANCE', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS where lineItem_LineItemType = "RIFee" GROUP BY lineItem_UsageType')
+    queryDatabase(memoryDb, 'USAGE', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_UsageType')
+    queryDatabase(memoryDb, 'RESERVED INSTANCE - OPERATIONS', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS where lineItem_LineItemType = "RIFee" GROUP BY lineItem_Operation')
+    queryDatabase(memoryDb, 'USAGE - OPERATIONS', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_Operation')
+    queryDatabase(memoryDb, 'DAILY COSTS PER SERVICE', 'select lineItem_ProductCode AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageEndDate) AS DATE, round(sum(lineitem_blendedcost),2) as TOTAL \
+        FROM line_items group by strftime(\'%Y-%m-%d\', lineItem_UsageEndDate), lineItem_ProductCode order by lineItem_ProductCode, strftime(\'%Y-%m-%d\', lineItem_UsageEndDate)')
+    queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND USAGE TYPE', 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_UsageType', )
+    queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND OPERATION', 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_Operation')
     flushMemoryDatabaseToDisk(memoryDb, fileManifest['account'])
