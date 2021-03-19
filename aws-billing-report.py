@@ -17,10 +17,14 @@ PARAM_BUCKET = '--bucket'
 PARAM_VERBOSE = '--verbose'
 PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 
+# command
+# python aws-billing-report.py --bucket BUCKET --profile PROFILE --billing-report-path BILLING_PATH --verbose 
+# python aws-billing-report.py --bucket billing-report-chipr --profile chiprdev --billing-report-path billing-report/billing-report-chipr/20210301-20210401/20210319T071138Z/ --verbose 
+
 # BILLING_REPORT_BUCKET = 'amarquezelogs'
-# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210201-20210301/20210303T011135Z/'
+# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210301-20210401/20210303T011135Z/'
 # PROFILE_NAME='pythonAutomation'
-# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20210201-20210301/ --profile pythonAutomation
+# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20210301-20210401/ --profile pythonAutomation
 
 # BILLING_REPORT_BUCKET = 'backup-chipr-denis'
 # BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210316T115638Z/'
@@ -270,7 +274,7 @@ if (commandLineResult['status']):
     boto3.setup_default_session(profile_name=commandLineResult[PARAM_PROFILE])
 
     # GLOBAL VARIABLES
-    extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', 'lineItem/ResourceId', \
+    extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', \
         'lineItem/UsageType', 'lineItem/Operation', 'lineItem/UsageAmount', 'lineItem/BlendedCost', 'lineItem/UnblendedCost', 'bill/BillingPeriodStartDate', 'lineItem/UsageAccountId', 'bill/InvoiceId']
 
     s3 = boto3.client('s3')
