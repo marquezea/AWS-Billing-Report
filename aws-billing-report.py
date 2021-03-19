@@ -32,7 +32,7 @@ PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 # PROFILE_NAME='chiprdev'
 # aws s3 ls s3://billing-report-chipr/billing-report/billing-report-chipr/20210301-20210401/ --profile chiprdev
 
-# PRINT MESSAGES WITH VERBOSE MODE IS ON
+# OUTPUT EXECUTION INFORMATION WHEN VERBOSE MODE IS ON
 def verbose(verboseMode, message):
     if verboseMode:
         print(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S") + ' : aws-billing-report.py : ' + message)
