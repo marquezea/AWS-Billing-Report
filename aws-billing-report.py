@@ -14,6 +14,7 @@ from termgraph import termgraph as tg
 CACHE_PATH = './cache/'
 PARAM_PROFILE = '--profile'
 PARAM_BUCKET = '--bucket'
+PARAM_VERBOSE = '--verbose'
 PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 
 # BILLING_REPORT_BUCKET = 'amarquezelogs'
@@ -22,7 +23,7 @@ PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 # aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20210201-20210301/ --profile pythonAutomation
 
 # BILLING_REPORT_BUCKET = 'backup-chipr-denis'
-# BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210315T141132Z/'
+# BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210316T115638Z/'
 # PROFILE_NAME='denischipr'
 # aws s3 ls s3://backup-chipr-denis/report/billing_report/20210301-20210401/ --profile denischipr
 
@@ -31,20 +32,26 @@ PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 # PROFILE_NAME='chiprdev'
 # aws s3 ls s3://billing-report-chipr/billing-report/billing-report-chipr/20210301-20210401/ --profile chiprdev
 
+# PRINT MESSAGES WITH VERBOSE MODE IS ON
+def verbose(verboseMode, message):
+    if verboseMode:
+        print(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S") + ' : aws-billing-report.py : ' + message)
+
 # GET COMMAND LINE ARGUMENTS
 def commandLineVerification():
     commandLineResult = {}
     isOk = True
     commandLineArguments = []
     for i, arg in enumerate(sys.argv):
-        if (arg.lower() == PARAM_BUCKET) or (arg.lower() == PARAM_PROFILE) or (arg.lower() == PARAM_BILLING_REPORT_PATH):
+        if (arg.lower() == PARAM_BUCKET) or (arg.lower() == PARAM_PROFILE) or (arg.lower() == PARAM_BILLING_REPORT_PATH) or (arg.lower() == PARAM_VERBOSE):
             commandLineArguments.append(arg.lower())
         else:
             commandLineArguments.append(arg)
-        if (arg.lower()[0:2] == '--'):
-            if (arg.lower() != PARAM_BUCKET) and (arg.lower() != PARAM_PROFILE) and (arg.lower() != PARAM_BILLING_REPORT_PATH):
+        if (arg[0:2] == '--'):
+            if (arg.lower() != PARAM_BUCKET) and (arg.lower() != PARAM_PROFILE) and (arg.lower() != PARAM_BILLING_REPORT_PATH) and (arg.lower() != PARAM_VERBOSE):
                 isOk = False
-                print('error: unknown parameter ' + arg.lower() + '\n')
+                print('error: unknown parameter ' + arg.lower())
+                print('usage: python aws-billing-report.py [{0} <aws-cli-profile-name>] {1} <bucket-name> {2} <path-to-billing-report> [{3}]'.format(PARAM_PROFILE,PARAM_BUCKET,PARAM_BILLING_REPORT_PATH,PARAM_VERBOSE))
     if (isOk):
         try:
             bucketName = commandLineArguments[commandLineArguments.index(PARAM_BUCKET)+1]
@@ -53,13 +60,14 @@ def commandLineVerification():
             billingReportPath = commandLineArguments[commandLineArguments.index(PARAM_BILLING_REPORT_PATH)+1]
             commandLineResult[PARAM_BILLING_REPORT_PATH] = billingReportPath
 
+            commandLineResult[PARAM_VERBOSE] = (PARAM_VERBOSE in commandLineArguments)
             try:    
                 profile = commandLineArguments[commandLineArguments.index(PARAM_PROFILE)+1]
             except:
                 profile = 'default'
             commandLineResult[PARAM_PROFILE] = profile
         except:
-            print('usage: python aws-billing-report.py [{0} <aws-cli-profile-name>] {1} <bucket-name> {2} <path-to-billing-report>'.format(PARAM_PROFILE,PARAM_BUCKET,PARAM_BILLING_REPORT_PATH))
+            print('usage: python aws-billing-report.py [{0} <aws-cli-profile-name>] {1} <bucket-name> {2} <path-to-billing-report> [{3}]'.format(PARAM_PROFILE,PARAM_BUCKET,PARAM_BILLING_REPORT_PATH,PARAM_VERBOSE))
     commandLineResult['status'] = isOk
     return commandLineResult
 
@@ -80,7 +88,7 @@ def unzipFile(cachePath, gzFilename):
     unzipedFile.write(file_content)
     unzipedFile.close()
 
-    deleteFile(cachePath + gzFilename)
+    #deleteFile(cachePath + gzFilename)
 
     return gzFilename[:-3]
 
@@ -230,13 +238,21 @@ def downloadFilesFromBucket(bucket_name, bucket_path):
     # check if cache exists and create it
     if (not os.path.exists(CACHE_PATH)):
         os.mkdir(CACHE_PATH)
-    bucketContents = s3.list_objects(Bucket=bucket_name,Prefix=bucket_path)['Contents']
+    listResult = s3.list_objects(Bucket=bucket_name,Prefix=bucket_path)
+    if ('Contents' in listResult):
+        bucketContents = listResult['Contents']
+    else:
+        bucketContents = []
     downloadFiles = []
     for item in bucketContents:
         filenameWithPath = item['Key']
         filename = Path(filenameWithPath).name
         makeCacheFolders(filenameWithPath)
-        s3.download_file(bucket_name, filenameWithPath, CACHE_PATH + filenameWithPath)
+        if (not os.path.exists(CACHE_PATH + filenameWithPath)):
+            verbose(commandLineResult['--verbose'], 'Downloading file {0}{1} from S3 bucket in AWS'.format(CACHE_PATH, filenameWithPath))
+            s3.download_file(bucket_name, filenameWithPath, CACHE_PATH + filenameWithPath)
+        else:
+            verbose(commandLineResult['--verbose'], 'Skipping download of file {0}{1}. File already in local cache.'.format(CACHE_PATH, filenameWithPath))
         if (filename[-3:] == '.gz'):
             downloadFiles.append(unzipFile(CACHE_PATH, filenameWithPath))
         if (filename[-5:] == '.json'):
@@ -247,39 +263,54 @@ def downloadFilesFromBucket(bucket_name, bucket_path):
 # MAIN FLOW
 commandLineResult = commandLineVerification()
 if (commandLineResult['status']):
+    verbose(commandLineResult['--verbose'], 'Starting execution ...')
+
     # INITIALIZE BOTO3
     # choose profile to be used 
     boto3.setup_default_session(profile_name=commandLineResult[PARAM_PROFILE])
 
     # GLOBAL VARIABLES
-    extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', \
+    extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', 'lineItem/ResourceId', \
         'lineItem/UsageType', 'lineItem/Operation', 'lineItem/UsageAmount', 'lineItem/BlendedCost', 'lineItem/UnblendedCost', 'bill/BillingPeriodStartDate', 'lineItem/UsageAccountId', 'bill/InvoiceId']
 
     s3 = boto3.client('s3')
+    verbose(commandLineResult['--verbose'], 'Downloading files from S3 bucket ...')
     downloadedFiles = downloadFilesFromBucket(commandLineResult[PARAM_BUCKET], commandLineResult[PARAM_BILLING_REPORT_PATH])
-    print(downloadedFiles)
-    fileManifest = fetchManifest(CACHE_PATH,downloadedFiles[1])
 
-    memoryDb = createMemoryDatabase(extractColumnList, fileManifest)
-    importCsvToDatabase(CACHE_PATH,downloadedFiles[0], memoryDb, extractColumnList, fileManifest)
-    queryDatabase(memoryDb, 'PERIODO', 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)) as USAGE_START, max(strftime(\'%Y-%m-%d\', lineItem_UsageEndDate)) as USAGE_END, round(sum(lineItem_BlendedCost),2) as TOTAL \
-        FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId')
-    queryDatabase(memoryDb, 'TYPE BREAKDOWN', 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
-        FROM LINE_ITEMS GROUP BY lineItem_LineItemType', )
-    queryDatabase(memoryDb, 'SERVICES', 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
-        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode')
-    queryDatabase(memoryDb, 'RESERVED INSTANCE', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
-        FROM LINE_ITEMS where lineItem_LineItemType = "RIFee" GROUP BY lineItem_UsageType')
-    queryDatabase(memoryDb, 'USAGE', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
-        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_UsageType')
-    queryDatabase(memoryDb, 'RESERVED INSTANCE - OPERATIONS', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
-        FROM LINE_ITEMS where lineItem_LineItemType = "RIFee" GROUP BY lineItem_Operation')
-    queryDatabase(memoryDb, 'USAGE - OPERATIONS', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
-        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_Operation')
-    queryDatabase(memoryDb, 'DAILY COSTS PER SERVICE', 'select lineItem_ProductCode AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageEndDate) AS DATE, round(sum(lineitem_blendedcost),2) as TOTAL \
-        FROM line_items group by strftime(\'%Y-%m-%d\', lineItem_UsageEndDate), lineItem_ProductCode order by lineItem_ProductCode, strftime(\'%Y-%m-%d\', lineItem_UsageEndDate)')
-    queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND USAGE TYPE', 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
-        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_UsageType', )
-    queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND OPERATION', 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_BlendedCost),2) AS BLENDED_COST \
-        FROM LINE_ITEMS where lineItem_LineItemType = "Usage" GROUP BY lineItem_ProductCode,lineItem_Operation')
-    flushMemoryDatabaseToDisk(memoryDb, fileManifest['account'])
+    if (len(downloadedFiles) > 0):
+        verbose(commandLineResult['--verbose'], 'Reading manifest from S3 bucket ...')
+        fileManifest = fetchManifest(CACHE_PATH,downloadedFiles[1])
+
+        verbose(commandLineResult['--verbose'], 'Creating in memory database ...')
+        memoryDb = createMemoryDatabase(extractColumnList, fileManifest)
+
+        verbose(commandLineResult['--verbose'], 'Importing CSV files ...')
+        importCsvToDatabase(CACHE_PATH,downloadedFiles[0], memoryDb, extractColumnList, fileManifest)
+        verbose(commandLineResult['--verbose'], 'Executing queries and output results ...')
+
+        queryDatabase(memoryDb, 'REPORT PERIOD', 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)) as USAGE_START, max(strftime(\'%Y-%m-%d\', lineItem_UsageEndDate)) as USAGE_END, round(sum(lineItem_UnblendedCost),2) as TOTAL \
+            FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId')
+        queryDatabase(memoryDb, 'HIGH LEVEL USAGE & COST BY TYPE', 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM LINE_ITEMS GROUP BY lineItem_LineItemType', )
+        queryDatabase(memoryDb, 'SERVICES COSTS (without Tax)', 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_ProductCode')
+        queryDatabase(memoryDb, 'RESERVED INSTANCE COSTS', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType = "RIFee" GROUP BY lineItem_UsageType')
+        queryDatabase(memoryDb, 'RESERVED INSTANCE - OPERATIONS', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType = "RIFee" GROUP BY lineItem_Operation')
+        queryDatabase(memoryDb, 'USAGE AND COST (without Tax)', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0')
+        queryDatabase(memoryDb, 'USAGE AND COSTS OPERATIONS (without Tax)', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_Operation')
+        queryDatabase(memoryDb, 'DAILY COSTS PER SERVICE (without Tax)', 'select lineItem_ProductCode AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, round(sum(lineItem_UnblendedCost),2) as TOTAL \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY strftime(\'%Y-%m-%d\', lineItem_UsageStartDate), lineItem_ProductCode HAVING round(sum(lineItem_UnblendedCost),2) > 0 ORDER BY lineItem_ProductCode, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
+        queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND USAGE TYPE (without Tax)', 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_ProductCode,lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0', )
+        queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND OPERATION (without Tax)', 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_ProductCode,lineItem_Operation HAVING round(SUM(lineItem_UsageAmount),2) > 0')
+        verbose(commandLineResult['--verbose'], 'Flushing in memory database to sqlite.db ({0})  ...'.format(fileManifest['account']))
+        flushMemoryDatabaseToDisk(memoryDb, fileManifest['account'])
+
+    else:
+        verbose(commandLineResult['--verbose'], 'No files in the provided bucket and billing report path ...')
+
