@@ -1,5 +1,6 @@
 import boto3
 import os
+import csv
 import gzip
 import json
 import sqlite3
@@ -20,9 +21,10 @@ PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 # command
 # python aws-billing-report.py --bucket BUCKET --profile PROFILE --billing-report-path BILLING_PATH --verbose 
 # python aws-billing-report.py --bucket billing-report-chipr --profile chiprdev --billing-report-path billing-report/billing-report-chipr/20210301-20210401/20210319T071138Z/ --verbose 
+# python aws-billing-report.py --bucket amarquezelogs --profile pythonAutomation --billing-report-path costreport/AMMCostReport/20260801-20260901/20260831T201708Z/ --verbose > 2026-08.txt
 
 # BILLING_REPORT_BUCKET = 'amarquezelogs'
-# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20210301-20210401/20210303T011135Z/'
+# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20260701-20260801/20260701T140549Z/'
 # PROFILE_NAME='pythonAutomation'
 # aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20210301-20210401/ --profile pythonAutomation
 
@@ -191,11 +193,13 @@ def fetchManifest(cachePath, filename):
 # IMPORT CSV FILE INTO MEMORY DATABASE
 def importCsvToDatabase(cachePath, csvFilename, memoryDB, extractColumnList, fileManifest):
 
-    with open(cachePath + csvFilename) as f:
+    with open(cachePath + csvFilename, newline='') as f:
         #print(extractColumnList)
 
+        # the report quotes any field containing a comma, so let the csv module split the records
+        csvReader = csv.reader(f)
         # read header line with the column names
-        columnHeader = f.readline().split(',')
+        columnHeader = next(csvReader)
         # print the index of each extract column
         columnIndexes = []
         for field in extractColumnList:
@@ -209,8 +213,7 @@ def importCsvToDatabase(cachePath, csvFilename, memoryDB, extractColumnList, fil
             columnDatatypes.append(columnDatatype)
         #print(columnDatatypes)
         # iterate over file and get each field value
-        for line in f:
-            record = line.split(',')
+        for record in csvReader:
             columnValues = []
             for field in extractColumnList:
                 columnIndex = columnHeader.index(field)
