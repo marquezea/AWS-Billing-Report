@@ -8,6 +8,8 @@ __pycache__/
 
 # report files
 2026*.txt
+# ... but the reports generated from the checked in samples are part of the repo
+!sample-new/*.txt
 
 # Distribution / packaging
 .Python
