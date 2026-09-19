@@ -1,0 +1,519 @@
+REPORT PERIOD
+=============
++--------------+--------------+---------------+-------------+---------+
+|   ACCOUNT_ID |   INVOICE_ID | USAGE_START   | USAGE_END   |   TOTAL |
+|--------------+--------------+---------------+-------------+---------|
+| 762695017549 |   2697292273 | 2026-06-01    | 2026-07-01  |  125.16 |
++--------------+--------------+---------------+-------------+---------+
+
+HIGH LEVEL USAGE & COST BY TYPE
+===============================
++-----------------+----------------+----------------+
+| ITEM_TYPE       |   USAGE_AMOUNT |   BLENDED_COST |
+|-----------------+----------------+----------------|
+| BundledDiscount |              0 |          -0.06 |
+| DiscountedUsage |           1440 |              0 |
+| RIFee           |           1440 |              0 |
+| Tax             |             14 |          15.21 |
+| Usage           |         366083 |         110.01 |
++-----------------+----------------+----------------+
+
+SERVICES COSTS (without Tax)
+============================
++------------------------------------+----------------+----------------+
+| PRODUCT_CODE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|------------------------------------+----------------+----------------|
+|                                    |              0 |          -0.06 |
+| AWS Glue                           |            997 |              0 |
+| AWS Key Management Service         |           1064 |              2 |
+| AWS Lambda                         |        20912.6 |              0 |
+| Amazon API Gateway                 |          17935 |           0.06 |
+| Amazon Cognito                     |             19 |              0 |
+| Amazon Elastic Compute Cloud       |        5123.75 |          38.97 |
+| Amazon Route 53                    |          30526 |           0.51 |
+| Amazon Simple Notification Service |             35 |              0 |
+| Amazon Simple Queue Service        |         276673 |              0 |
+| Amazon Simple Storage Service      |         7748.1 |           0.07 |
+| Amazon Virtual Private Cloud       |        7920.02 |           68.4 |
+| AmazonCloudWatch                   |           8.23 |              0 |
+| CloudFront Flat-Rate Plans         |              1 |              0 |
++------------------------------------+----------------+----------------+
+
+RESERVED INSTANCE COSTS
+=======================
++----------------------------+----------------+----------------+
+| USAGE_TYPE                 |   USAGE_AMOUNT |   BLENDED_COST |
+|----------------------------+----------------+----------------|
+| USW2-HeavyUsage:t4g.medium |            720 |              0 |
+| USW2-HeavyUsage:t4g.small  |            720 |              0 |
++----------------------------+----------------+----------------+
+
+RESERVED INSTANCE - OPERATIONS
+==============================
++--------------+----------------+----------------+
+| USAGE_TYPE   |   USAGE_AMOUNT |   BLENDED_COST |
+|--------------+----------------+----------------|
+| RunInstances |           1440 |              0 |
++--------------+----------------+----------------+
+
+USAGE AND COST (without Tax)
+============================
++----------------------------------+----------------+----------------+
+| USAGE_TYPE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|----------------------------------+----------------+----------------|
+| APN1-Catalog-Request             |             61 |              0 |
+| APN1-Requests-Tier1              |              1 |              0 |
+| APN2-Catalog-Request             |             60 |              0 |
+| APN3-Catalog-Request             |             60 |              0 |
+| APS1-Catalog-Request             |             59 |              0 |
+| APS1-Requests-Tier1              |              1 |              0 |
+| APS2-Catalog-Request             |             60 |              0 |
+| APS3-Catalog-Request             |             59 |              0 |
+| APS3-Requests-Tier1              |              2 |              0 |
+| CAN1-Catalog-Request             |             60 |              0 |
+| DNS-Queries                      |          29050 |           0.01 |
+| EU-Catalog-Request               |             55 |              0 |
+| EU-Requests-Tier1                |              1 |              0 |
+| EUC1-Catalog-Request             |             60 |              0 |
+| EUC1-Requests-Tier1              |              3 |              0 |
+| EUN1-Catalog-Request             |             60 |              0 |
+| EUN1-Requests-Tier1              |              1 |              0 |
+| EUW2-Catalog-Request             |             61 |              0 |
+| EUW3-Catalog-Request             |             60 |              0 |
+| Global-Bucket-Hrs-FreeTier       |           0.21 |              0 |
+| Global-CloudFrontPlan-Free       |              1 |              0 |
+| HostedZone                       |              1 |            0.5 |
+| Intra-AWS-DNS-Queries            |           1475 |              0 |
+| Requests-Tier1                   |             88 |              0 |
+| Requests-Tier2                   |            315 |              0 |
+| SAE1-Catalog-Request             |             60 |              0 |
+| USE1-Catalog-Request             |             60 |              0 |
+| USE2-Catalog-Request             |             60 |              0 |
+| USE2-Requests-Tier1              |              2 |              0 |
+| USW1-Catalog-Request             |             60 |              0 |
+| USW2-ApiGatewayRequest           |          17935 |           0.06 |
+| USW2-BoxUsage:t4g.medium         |            720 |              0 |
+| USW2-BoxUsage:t4g.small          |            720 |              0 |
+| USW2-CW:AlarmMonitorUsage        |              6 |              0 |
+| USW2-CW:MetricMonitorUsage       |           1.84 |              0 |
+| USW2-Catalog-Request             |             42 |              0 |
+| USW2-CloudFront-In-Bytes         |           0.03 |              0 |
+| USW2-CognitoEssentialsMAU        |             19 |              0 |
+| USW2-DataProcessing-Bytes        |           0.13 |              0 |
+| USW2-DataTransfer-In-Bytes       |           0.31 |              0 |
+| USW2-DataTransfer-Out-Bytes      |           0.63 |              0 |
+| USW2-DataTransfer-Regional-Bytes |           0.68 |              0 |
+| USW2-EBS:VolumeUsage.gp3         |             82 |           6.56 |
+| USW2-EBSOptimized:t4g.medium     |            720 |              0 |
+| USW2-EBSOptimized:t4g.small      |            720 |              0 |
+| USW2-HeavyUsage:t4g.medium       |            720 |              0 |
+| USW2-HeavyUsage:t4g.small        |            720 |              0 |
+| USW2-Lambda-GB-Second            |        2624.58 |              0 |
+| USW2-NatGateway-Bytes            |           0.21 |           0.01 |
+| USW2-NatGateway-Hours            |            720 |           32.4 |
+| USW2-PublicIPv4:InUseAddress     |           2160 |           10.8 |
+| USW2-Request                     |          18288 |              0 |
+| USW2-Requests-Tier1              |         277115 |              0 |
+| USW2-Requests-Tier2              |           6924 |              0 |
+| USW2-TimedStorage-ByteHrs        |           2.98 |             -0 |
+| USW2-USE1-AWS-In-Bytes           |           0.03 |              0 |
+| USW2-USE1-AWS-Out-Bytes          |           0.01 |              0 |
+| USW2-VendedLog-Bytes             |           0.04 |              0 |
+| USW2-VpcEndpoint-Bytes           |           0.01 |              0 |
+| USW2-VpcEndpoint-Hours           |           5760 |           57.6 |
+| us-east-1-KMS-Requests           |              6 |              0 |
+| us-west-2-KMS-Keys               |              2 |              2 |
+| us-west-2-KMS-Requests           |           1056 |              0 |
++----------------------------------+----------------+----------------+
+
+USAGE AND COSTS OPERATIONS (without Tax)
+========================================
++--------------------------------+----------------+----------------+
+| USAGE_TYPE                     |   USAGE_AMOUNT |   BLENDED_COST |
+|--------------------------------+----------------+----------------|
+| A                              |          10980 |              0 |
+| AAAA                           |           5270 |              0 |
+| ANY                            |             20 |              0 |
+| ApiGatewayRequest              |          17935 |           0.06 |
+| AssociateAddressVPC            |           1440 |            7.2 |
+| CAA                            |            179 |              0 |
+| CDS                            |              1 |              0 |
+| CNAME                          |            476 |              0 |
+| CloudFrontPlan                 |              1 |              0 |
+| CognitoEssentialsOperation     |             19 |              0 |
+| CopyObject                     |          80.03 |              0 |
+| CreateVolume-Gp3               |             82 |           6.56 |
+| CurrentKeys                    |              2 |              2 |
+| DNAME                          |              1 |              0 |
+| DNSKEY                         |           3181 |              0 |
+| DS                             |              2 |              0 |
+| Decrypt                        |            122 |              0 |
+| DeleteMessageBatch             |              4 |              0 |
+| DescribeKey                    |            210 |              0 |
+| GeneralPurposeBuckets          |           0.21 |              0 |
+| GenerateDataKey                |             88 |              0 |
+| GetBucketAntuConfiguration     |            315 |              0 |
+| GetBucketMetadataConfig        |            315 |              0 |
+| GetKeyPolicy                   |            210 |              0 |
+| GetKeyRotationStatus           |            210 |              0 |
+| GetObject                      |            218 |              0 |
+| GetQueueAttributes             |          17185 |              0 |
+| GetQueueUrl                    |            105 |              0 |
+| HINFO                          |              2 |              0 |
+| HTTPS                          |            845 |              0 |
+| HeadBucket                     |            315 |              0 |
+| HeadObject                     |            692 |              0 |
+| HostedZone                     |              1 |            0.5 |
+| Hourly                         |           1440 |              0 |
+| HourlyStorageMetering          |           0.21 |              0 |
+| InterZone-In                   |           0.16 |              0 |
+| InterZone-Out                  |           0.43 |              0 |
+| Invoke                         |        20912.6 |              0 |
+| List                           |             41 |              0 |
+| ListAllMyBuckets               |             41 |              0 |
+| ListAllMyDirectoryBuckets      |             14 |              0 |
+| ListBucketTags                 |            315 |              0 |
+| ListKeys                       |             12 |              0 |
+| ListLensConfigurations         |             25 |              0 |
+| ListMRAPs                      |              1 |              0 |
+| ListQueueTags                  |            263 |              0 |
+| ListResourceTags               |            210 |              0 |
+| ListStorageLensGroups          |             20 |              0 |
+| ListTopics                     |             35 |              0 |
+| MX                             |           1604 |              0 |
+| MetricStorage:AWS/ApiGateway   |           1.84 |              0 |
+| NAPTR                          |              3 |              0 |
+| NS                             |           1342 |              0 |
+| NatGateway                     |         720.21 |          32.41 |
+| PTR                            |              7 |              0 |
+| PostObject                     |          165.1 |              0 |
+| PublicIP-In                    |           0.05 |              0 |
+| PublicIP-Out                   |           0.06 |              0 |
+| PutLogEvents                   |           0.18 |              0 |
+| PutObject                      |            160 |              0 |
+| RP                             |              6 |              0 |
+| ReadAccelerate                 |            315 |              0 |
+| ReadBucketAbac                 |            315 |              0 |
+| ReadBucketAnalytics            |            315 |              0 |
+| ReadBucketCors                 |            315 |              0 |
+| ReadBucketIntelligentTiering   |            315 |              0 |
+| ReadBucketInventory            |            315 |              0 |
+| ReadBucketLifecycle            |            315 |              0 |
+| ReadBucketMetrics              |            315 |              0 |
+| ReadBucketOwnershipControls    |            315 |              0 |
+| ReadBucketPolicy               |            280 |              0 |
+| ReadBucketPublicAccessBlock    |            315 |              0 |
+| ReadBucketReplication          |            315 |              0 |
+| ReadBucketServerSideEncryption |            345 |              0 |
+| ReadLocation                   |              2 |              0 |
+| ReadLogProps                   |            345 |              0 |
+| ReadNotificationProps          |            317 |              0 |
+| ReadVersioningProps            |            315 |              0 |
+| Receive                        |         259071 |              0 |
+| Request                        |            997 |              0 |
+| RunInstances                   |        3600.84 |            3.6 |
+| SOA                            |            996 |              0 |
+| SPF                            |             10 |              0 |
+| SRV                            |             78 |              0 |
+| SSHFP                          |              3 |              0 |
+| SVCB                           |              4 |              0 |
+| Send                           |              4 |              0 |
+| StandardStorage                |           2.76 |             -0 |
+| TLSA                           |              1 |              0 |
+| TXT                            |           5510 |              0 |
+| UNSUPPORTED                    |              4 |              0 |
+| Unknown                        |              6 |              0 |
+| VpcEndpoint                    |        5760.02 |           57.6 |
++--------------------------------+----------------+----------------+
+
+DAILY COSTS PER SERVICE (without Tax)
+=====================================
++------------------------------+------------+---------+
+| PRODUCT_CODE                 | DATE       |   TOTAL |
+|------------------------------+------------+---------|
+| AWS Key Management Service   | 2026-06-01 |    0.07 |
+| AWS Key Management Service   | 2026-06-02 |    0.07 |
+| AWS Key Management Service   | 2026-06-03 |    0.07 |
+| AWS Key Management Service   | 2026-06-04 |    0.07 |
+| AWS Key Management Service   | 2026-06-05 |    0.07 |
+| AWS Key Management Service   | 2026-06-06 |    0.07 |
+| AWS Key Management Service   | 2026-06-07 |    0.07 |
+| AWS Key Management Service   | 2026-06-08 |    0.07 |
+| AWS Key Management Service   | 2026-06-09 |    0.07 |
+| AWS Key Management Service   | 2026-06-10 |    0.07 |
+| AWS Key Management Service   | 2026-06-11 |    0.07 |
+| AWS Key Management Service   | 2026-06-12 |    0.07 |
+| AWS Key Management Service   | 2026-06-13 |    0.07 |
+| AWS Key Management Service   | 2026-06-14 |    0.07 |
+| AWS Key Management Service   | 2026-06-15 |    0.07 |
+| AWS Key Management Service   | 2026-06-16 |    0.07 |
+| AWS Key Management Service   | 2026-06-17 |    0.07 |
+| AWS Key Management Service   | 2026-06-18 |    0.07 |
+| AWS Key Management Service   | 2026-06-19 |    0.07 |
+| AWS Key Management Service   | 2026-06-20 |    0.07 |
+| AWS Key Management Service   | 2026-06-21 |    0.07 |
+| AWS Key Management Service   | 2026-06-22 |    0.07 |
+| AWS Key Management Service   | 2026-06-23 |    0.07 |
+| AWS Key Management Service   | 2026-06-24 |    0.07 |
+| AWS Key Management Service   | 2026-06-25 |    0.07 |
+| AWS Key Management Service   | 2026-06-26 |    0.07 |
+| AWS Key Management Service   | 2026-06-27 |    0.07 |
+| AWS Key Management Service   | 2026-06-28 |    0.07 |
+| AWS Key Management Service   | 2026-06-29 |    0.07 |
+| AWS Key Management Service   | 2026-06-30 |    0.06 |
+| Amazon API Gateway           | 2026-06-01 |    0.01 |
+| Amazon API Gateway           | 2026-06-02 |    0.01 |
+| Amazon API Gateway           | 2026-06-03 |    0.02 |
+| Amazon Elastic Compute Cloud | 2026-06-01 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-02 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-03 |    1.31 |
+| Amazon Elastic Compute Cloud | 2026-06-04 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-05 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-06 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-07 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-08 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-09 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-10 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-11 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-12 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-13 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-14 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-15 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-16 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-17 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-18 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-19 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-20 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-21 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-22 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-23 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-24 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-25 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-26 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-27 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-28 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-29 |     1.3 |
+| Amazon Elastic Compute Cloud | 2026-06-30 |     1.3 |
+| Amazon Route 53              | 2026-06-01 |     0.5 |
+| Amazon Virtual Private Cloud | 2026-06-01 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-02 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-03 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-04 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-05 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-06 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-07 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-08 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-09 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-10 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-11 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-12 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-13 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-14 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-15 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-16 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-17 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-18 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-19 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-20 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-21 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-22 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-23 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-24 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-25 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-26 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-27 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-28 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-29 |    2.28 |
+| Amazon Virtual Private Cloud | 2026-06-30 |    2.28 |
++------------------------------+------------+---------+
+
+DAILY COSTS PER SERVICE - PIVOT (without Tax)
+=============================================
++-------------------------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+---------+
+| PRODUCT_CODE                  |    01 |    02 |    03 |    04 |    05 |    06 |    07 |    08 |    09 |    10 |    11 |    12 |    13 |    14 |    15 |    16 |    17 |    18 |    19 |    20 |    21 |    22 |    23 |    24 |    25 |    26 |    27 |    28 |    29 |    30 |   TOTAL |
+|-------------------------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+---------|
+| Amazon Virtual Private Cloud  |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |  2.28 |   68.40 |
+| Amazon Elastic Compute Cloud  |  1.30 |  1.30 |  1.31 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |  1.30 |   38.97 |
+| AWS Key Management Service    |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.07 |  0.06 |    2.00 |
+| Amazon Route 53               |  0.50 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |    0.51 |
+| Amazon Simple Storage Service |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |    0.07 |
+| Amazon API Gateway            |  0.01 |  0.01 |  0.02 |  0.00 |  0.00 |       |       |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |       |       |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |       |       |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |       |       |  0.00 |       |    0.06 |
+|                               | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 | -0.00 |   -0.06 |
+| TOTAL                         |  4.15 |  3.65 |  3.67 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.65 |  3.64 |  109.95 |
++-------------------------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+---------+
+
+SUBTOTAL PER PRODUCT AND USAGE TYPE (without Tax)
+=================================================
++------------------------------------+----------------------------------+----------------+----------------+
+| PRODUCT_CODE                       | USAGE_TYPE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|------------------------------------+----------------------------------+----------------+----------------|
+| AWS Glue                           | APN1-Catalog-Request             |             61 |              0 |
+| AWS Glue                           | APN2-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | APN3-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | APS1-Catalog-Request             |             59 |              0 |
+| AWS Glue                           | APS2-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | APS3-Catalog-Request             |             59 |              0 |
+| AWS Glue                           | CAN1-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | EU-Catalog-Request               |             55 |              0 |
+| AWS Glue                           | EUC1-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | EUN1-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | EUW2-Catalog-Request             |             61 |              0 |
+| AWS Glue                           | EUW3-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | SAE1-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | USE1-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | USE2-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | USW1-Catalog-Request             |             60 |              0 |
+| AWS Glue                           | USW2-Catalog-Request             |             42 |              0 |
+| AWS Key Management Service         | us-east-1-KMS-Requests           |              6 |              0 |
+| AWS Key Management Service         | us-west-2-KMS-Keys               |              2 |              2 |
+| AWS Key Management Service         | us-west-2-KMS-Requests           |           1056 |              0 |
+| AWS Lambda                         | USW2-Lambda-GB-Second            |        2624.58 |              0 |
+| AWS Lambda                         | USW2-Request                     |          18288 |              0 |
+| Amazon API Gateway                 | USW2-ApiGatewayRequest           |          17935 |           0.06 |
+| Amazon API Gateway                 | USW2-DataTransfer-Out-Bytes      |           0.02 |              0 |
+| Amazon Cognito                     | USW2-CognitoEssentialsMAU        |             19 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-BoxUsage:t4g.medium         |            720 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-BoxUsage:t4g.small          |            720 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-CloudFront-In-Bytes         |           0.03 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-DataTransfer-In-Bytes       |            0.2 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-DataTransfer-Out-Bytes      |           0.61 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-DataTransfer-Regional-Bytes |           0.68 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-EBS:VolumeUsage.gp3         |             82 |           6.56 |
+| Amazon Elastic Compute Cloud       | USW2-EBSOptimized:t4g.medium     |            720 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-EBSOptimized:t4g.small      |            720 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-HeavyUsage:t4g.medium       |            720 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-HeavyUsage:t4g.small        |            720 |              0 |
+| Amazon Elastic Compute Cloud       | USW2-NatGateway-Bytes            |           0.21 |           0.01 |
+| Amazon Elastic Compute Cloud       | USW2-NatGateway-Hours            |            720 |           32.4 |
+| Amazon Elastic Compute Cloud       | USW2-USE1-AWS-Out-Bytes          |           0.01 |              0 |
+| Amazon Route 53                    | DNS-Queries                      |          29050 |           0.01 |
+| Amazon Route 53                    | HostedZone                       |              1 |            0.5 |
+| Amazon Route 53                    | Intra-AWS-DNS-Queries            |           1475 |              0 |
+| Amazon Simple Notification Service | USW2-Requests-Tier1              |             35 |              0 |
+| Amazon Simple Queue Service        | USW2-Requests-Tier1              |         276673 |              0 |
+| Amazon Simple Storage Service      | APN1-Requests-Tier1              |              1 |              0 |
+| Amazon Simple Storage Service      | APS1-Requests-Tier1              |              1 |              0 |
+| Amazon Simple Storage Service      | APS3-Requests-Tier1              |              2 |              0 |
+| Amazon Simple Storage Service      | EU-Requests-Tier1                |              1 |              0 |
+| Amazon Simple Storage Service      | EUC1-Requests-Tier1              |              3 |              0 |
+| Amazon Simple Storage Service      | EUN1-Requests-Tier1              |              1 |              0 |
+| Amazon Simple Storage Service      | Global-Bucket-Hrs-FreeTier       |           0.21 |              0 |
+| Amazon Simple Storage Service      | Requests-Tier1                   |             88 |              0 |
+| Amazon Simple Storage Service      | Requests-Tier2                   |            315 |              0 |
+| Amazon Simple Storage Service      | USE2-Requests-Tier1              |              2 |              0 |
+| Amazon Simple Storage Service      | USW2-DataTransfer-In-Bytes       |            0.1 |              0 |
+| Amazon Simple Storage Service      | USW2-Requests-Tier1              |            407 |              0 |
+| Amazon Simple Storage Service      | USW2-Requests-Tier2              |           6924 |              0 |
+| Amazon Simple Storage Service      | USW2-TimedStorage-ByteHrs        |           2.76 |           0.06 |
+| Amazon Simple Storage Service      | USW2-USE1-AWS-In-Bytes           |           0.03 |              0 |
+| Amazon Virtual Private Cloud       | USW2-PublicIPv4:InUseAddress     |           2160 |           10.8 |
+| Amazon Virtual Private Cloud       | USW2-VpcEndpoint-Bytes           |           0.01 |              0 |
+| Amazon Virtual Private Cloud       | USW2-VpcEndpoint-Hours           |           5760 |           57.6 |
+| AmazonCloudWatch                   | USW2-CW:AlarmMonitorUsage        |              6 |              0 |
+| AmazonCloudWatch                   | USW2-CW:MetricMonitorUsage       |           1.84 |              0 |
+| AmazonCloudWatch                   | USW2-DataProcessing-Bytes        |           0.13 |              0 |
+| AmazonCloudWatch                   | USW2-TimedStorage-ByteHrs        |           0.21 |              0 |
+| AmazonCloudWatch                   | USW2-VendedLog-Bytes             |           0.04 |              0 |
+| CloudFront Flat-Rate Plans         | Global-CloudFrontPlan-Free       |              1 |              0 |
++------------------------------------+----------------------------------+----------------+----------------+
+
+SUBTOTAL PER PRODUCT AND OPERATION (without Tax)
+================================================
++------------------------------------+--------------------------------+----------------+----------------+
+| PRODUCT_CODE                       | USAGE_TYPE                     |   USAGE_AMOUNT |   BLENDED_COST |
+|------------------------------------+--------------------------------+----------------+----------------|
+| AWS Glue                           | Request                        |            997 |              0 |
+| AWS Key Management Service         | CurrentKeys                    |              2 |              2 |
+| AWS Key Management Service         | Decrypt                        |            122 |              0 |
+| AWS Key Management Service         | DescribeKey                    |            210 |              0 |
+| AWS Key Management Service         | GenerateDataKey                |             88 |              0 |
+| AWS Key Management Service         | GetKeyPolicy                   |            210 |              0 |
+| AWS Key Management Service         | GetKeyRotationStatus           |            210 |              0 |
+| AWS Key Management Service         | ListKeys                       |             12 |              0 |
+| AWS Key Management Service         | ListResourceTags               |            210 |              0 |
+| AWS Lambda                         | Invoke                         |        20912.6 |              0 |
+| Amazon API Gateway                 | ApiGatewayRequest              |          17935 |           0.06 |
+| Amazon Cognito                     | CognitoEssentialsOperation     |             19 |              0 |
+| Amazon Elastic Compute Cloud       | CreateVolume-Gp3               |             82 |           6.56 |
+| Amazon Elastic Compute Cloud       | Hourly                         |           1440 |              0 |
+| Amazon Elastic Compute Cloud       | InterZone-In                   |           0.16 |              0 |
+| Amazon Elastic Compute Cloud       | InterZone-Out                  |           0.43 |              0 |
+| Amazon Elastic Compute Cloud       | NatGateway                     |         720.21 |          32.41 |
+| Amazon Elastic Compute Cloud       | PublicIP-In                    |           0.05 |              0 |
+| Amazon Elastic Compute Cloud       | PublicIP-Out                   |           0.06 |              0 |
+| Amazon Elastic Compute Cloud       | RunInstances                   |        2880.84 |              0 |
+| Amazon Route 53                    | A                              |          10980 |              0 |
+| Amazon Route 53                    | AAAA                           |           5270 |              0 |
+| Amazon Route 53                    | ANY                            |             20 |              0 |
+| Amazon Route 53                    | CAA                            |            179 |              0 |
+| Amazon Route 53                    | CDS                            |              1 |              0 |
+| Amazon Route 53                    | CNAME                          |            476 |              0 |
+| Amazon Route 53                    | DNAME                          |              1 |              0 |
+| Amazon Route 53                    | DNSKEY                         |           3181 |              0 |
+| Amazon Route 53                    | DS                             |              2 |              0 |
+| Amazon Route 53                    | HINFO                          |              2 |              0 |
+| Amazon Route 53                    | HTTPS                          |            845 |              0 |
+| Amazon Route 53                    | HostedZone                     |              1 |            0.5 |
+| Amazon Route 53                    | MX                             |           1604 |              0 |
+| Amazon Route 53                    | NAPTR                          |              3 |              0 |
+| Amazon Route 53                    | NS                             |           1342 |              0 |
+| Amazon Route 53                    | PTR                            |              7 |              0 |
+| Amazon Route 53                    | RP                             |              6 |              0 |
+| Amazon Route 53                    | SOA                            |            996 |              0 |
+| Amazon Route 53                    | SPF                            |             10 |              0 |
+| Amazon Route 53                    | SRV                            |             78 |              0 |
+| Amazon Route 53                    | SSHFP                          |              3 |              0 |
+| Amazon Route 53                    | SVCB                           |              4 |              0 |
+| Amazon Route 53                    | TLSA                           |              1 |              0 |
+| Amazon Route 53                    | TXT                            |           5510 |              0 |
+| Amazon Route 53                    | UNSUPPORTED                    |              4 |              0 |
+| Amazon Simple Notification Service | ListTopics                     |             35 |              0 |
+| Amazon Simple Queue Service        | DeleteMessageBatch             |              4 |              0 |
+| Amazon Simple Queue Service        | GetQueueAttributes             |          17185 |              0 |
+| Amazon Simple Queue Service        | GetQueueUrl                    |            105 |              0 |
+| Amazon Simple Queue Service        | List                           |             41 |              0 |
+| Amazon Simple Queue Service        | ListQueueTags                  |            263 |              0 |
+| Amazon Simple Queue Service        | Receive                        |         259071 |              0 |
+| Amazon Simple Queue Service        | Send                           |              4 |              0 |
+| Amazon Simple Storage Service      | CopyObject                     |          80.03 |              0 |
+| Amazon Simple Storage Service      | GeneralPurposeBuckets          |           0.21 |              0 |
+| Amazon Simple Storage Service      | GetBucketAntuConfiguration     |            315 |              0 |
+| Amazon Simple Storage Service      | GetBucketMetadataConfig        |            315 |              0 |
+| Amazon Simple Storage Service      | GetObject                      |            218 |              0 |
+| Amazon Simple Storage Service      | HeadBucket                     |            315 |              0 |
+| Amazon Simple Storage Service      | HeadObject                     |            692 |              0 |
+| Amazon Simple Storage Service      | ListAllMyBuckets               |             41 |              0 |
+| Amazon Simple Storage Service      | ListAllMyDirectoryBuckets      |             14 |              0 |
+| Amazon Simple Storage Service      | ListBucketTags                 |            315 |              0 |
+| Amazon Simple Storage Service      | ListLensConfigurations         |             25 |              0 |
+| Amazon Simple Storage Service      | ListMRAPs                      |              1 |              0 |
+| Amazon Simple Storage Service      | ListStorageLensGroups          |             20 |              0 |
+| Amazon Simple Storage Service      | PostObject                     |          165.1 |              0 |
+| Amazon Simple Storage Service      | PutObject                      |            160 |              0 |
+| Amazon Simple Storage Service      | ReadAccelerate                 |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketAbac                 |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketAnalytics            |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketCors                 |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketIntelligentTiering   |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketInventory            |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketLifecycle            |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketMetrics              |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketOwnershipControls    |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketPolicy               |            280 |              0 |
+| Amazon Simple Storage Service      | ReadBucketPublicAccessBlock    |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketReplication          |            315 |              0 |
+| Amazon Simple Storage Service      | ReadBucketServerSideEncryption |            345 |              0 |
+| Amazon Simple Storage Service      | ReadLocation                   |              2 |              0 |
+| Amazon Simple Storage Service      | ReadLogProps                   |            345 |              0 |
+| Amazon Simple Storage Service      | ReadNotificationProps          |            317 |              0 |
+| Amazon Simple Storage Service      | ReadVersioningProps            |            315 |              0 |
+| Amazon Simple Storage Service      | StandardStorage                |           2.76 |           0.06 |
+| Amazon Virtual Private Cloud       | AssociateAddressVPC            |           1440 |            7.2 |
+| Amazon Virtual Private Cloud       | RunInstances                   |            720 |            3.6 |
+| Amazon Virtual Private Cloud       | VpcEndpoint                    |        5760.02 |           57.6 |
+| AmazonCloudWatch                   | HourlyStorageMetering          |           0.21 |              0 |
+| AmazonCloudWatch                   | MetricStorage:AWS/ApiGateway   |           1.84 |              0 |
+| AmazonCloudWatch                   | PutLogEvents                   |           0.18 |              0 |
+| AmazonCloudWatch                   | Unknown                        |              6 |              0 |
+| CloudFront Flat-Rate Plans         | CloudFrontPlan                 |              1 |              0 |
++------------------------------------+--------------------------------+----------------+----------------+
