@@ -1,0 +1,800 @@
+REPORT PERIOD
+=============
++--------------+--------------+---------------+-------------+---------+
+|   ACCOUNT_ID |   INVOICE_ID | USAGE_START   | USAGE_END   |   TOTAL |
+|--------------+--------------+---------------+-------------+---------|
+| 157320905331 |              | 2026-09-01    | 2026-10-01  |   21.72 |
+| 335707348421 |              | 2026-09-01    | 2026-10-01  |  147.75 |
+| 335707348421 |   2830423721 | 2026-09-18    | 2027-09-18  |   48.95 |
+| 335707348421 |   2830444781 | 2026-09-18    | 2027-09-18  |   48.95 |
++--------------+--------------+---------------+-------------+---------+
+
+HIGH LEVEL USAGE & COST BY TYPE
+===============================
++-----------------+----------------+----------------+
+| ITEM_TYPE       |   USAGE_AMOUNT |   BLENDED_COST |
+|-----------------+----------------+----------------|
+| DiscountedUsage |          24.85 |              0 |
+| Fee             |              2 |             86 |
+| RIFee           |         620.74 |              0 |
+| Tax             |             47 |          29.65 |
+| Usage           |         534296 |         151.72 |
++-----------------+----------------+----------------+
+
+SERVICES COSTS (without Tax)
+============================
++--------------------------------------------+----------------+----------------+
+| PRODUCT_CODE                               |   USAGE_AMOUNT |   BLENDED_COST |
+|--------------------------------------------+----------------+----------------|
+| AWS Backup                                 |              0 |              0 |
+| AWS Certificate Manager                    |              2 |              0 |
+| AWS Glue                                   |         165.61 |              0 |
+| AWS Key Management Service                 |             37 |              0 |
+| AWS Lambda                                 |        35726.6 |              0 |
+| AWS Secrets Manager                        |        50198.1 |           1.89 |
+| Amazon API Gateway                         |        33630.1 |           0.12 |
+| Amazon CloudFront                          |        46571.8 |              0 |
+| Amazon DynamoDB                            |        5482.57 |              0 |
+| Amazon EC2 Container Registry (ECR)        |            0.2 |           0.02 |
+| Amazon Elastic Compute Cloud               |        1480.78 |         111.32 |
+| Amazon Elastic Container Service           |         362.21 |           5.96 |
+| Amazon Elastic File System                 |              0 |              0 |
+| Amazon Rekognition                         |            7.2 |              0 |
+| Amazon Relational Database Service         |        1807.49 |          78.58 |
+| Amazon Route 53                            |          28844 |           2.01 |
+| Amazon Simple Notification Service         |             43 |              0 |
+| Amazon Simple Queue Service                |         167854 |              0 |
+| Amazon Simple Storage Service              |         159294 |           0.81 |
+| Amazon Virtual Private Cloud               |        3178.77 |          20.26 |
+| Amazon WorkSpaces                          |              2 |           9.75 |
+| AmazonCloudWatch                           |          13.43 |              0 |
+| Claude Haiku 4.5 (Amazon Bedrock Edition)  |           0.27 |           0.69 |
+| Claude Sonnet 4.6 (Amazon Bedrock Edition) |            0.2 |           0.87 |
+| Elastic Load Balancing                     |         242.43 |           5.45 |
++--------------------------------------------+----------------+----------------+
+
+RESERVED INSTANCE COSTS
+=======================
++---------------------------+----------------+----------------+
+| USAGE_TYPE                |   USAGE_AMOUNT |   BLENDED_COST |
+|---------------------------+----------------+----------------|
+| HeavyUsage:t4g.micro      |         311.02 |              0 |
+| USW2-HeavyUsage:t4g.micro |         309.72 |              0 |
++---------------------------+----------------+----------------+
+
+RESERVED INSTANCE - OPERATIONS
+==============================
++--------------+----------------+----------------+
+| USAGE_TYPE   |   USAGE_AMOUNT |   BLENDED_COST |
+|--------------+----------------+----------------|
+| RunInstances |         620.74 |              0 |
++--------------+----------------+----------------+
+
+USAGE AND COST (without Tax)
+============================
++--------------------------------------------+----------------+----------------+
+| USAGE_TYPE                                 |   USAGE_AMOUNT |   BLENDED_COST |
+|--------------------------------------------+----------------+----------------|
+| AP-DataTransfer-Out-Bytes                  |           0.08 |              0 |
+| AP-Requests-HTTPS-Proxy                    |             65 |              0 |
+| AP-Requests-Tier1                          |           1035 |              0 |
+| AP-Requests-Tier2-HTTPS                    |           3324 |              0 |
+| AU-Requests-Tier2-HTTPS                    |              6 |              0 |
+| BoxUsage:t4g.micro                         |           0.85 |              0 |
+| CA-DataTransfer-Out-Bytes                  |           0.04 |              0 |
+| CA-Requests-HTTPS-Proxy                    |              1 |              0 |
+| CA-Requests-Tier1                          |           2439 |              0 |
+| CA-Requests-Tier2-HTTPS                    |           3317 |              0 |
+| CPUCredits:t4g                             |           0.05 |              0 |
+| CW:AlarmMonitorUsage                       |           3.03 |              0 |
+| CW:Requests                                |              1 |              0 |
+| DNS-Queries                                |          21992 |           0.01 |
+| DataTransfer-Out-Bytes                     |           0.01 |              0 |
+| DeliveryAttempts-SMTP                      |              3 |              0 |
+| EBS:SnapshotUsage                          |           3.17 |           0.16 |
+| EBS:VolumeUsage.gp3                        |           0.86 |           0.07 |
+| EBSOptimized:t4g.micro                     |           0.85 |              0 |
+| EU-DataTransfer-Out-Bytes                  |           0.18 |              0 |
+| EU-Requests-HTTP-Proxy                     |            183 |              0 |
+| EU-Requests-HTTPS-Proxy                    |           3362 |              0 |
+| EU-Requests-Tier1                          |           1441 |              0 |
+| EU-Requests-Tier2-HTTPS                    |          11321 |              0 |
+| Global-Bucket-Hrs-FreeTier                 |            0.6 |              0 |
+| HeavyUsage:t4g.micro                       |         312.02 |             43 |
+| HostedZone                                 |              4 |              2 |
+| IN-DataTransfer-Out-Bytes                  |           0.01 |              0 |
+| IN-Requests-HTTPS-Proxy                    |             18 |              0 |
+| IN-Requests-Tier1                          |            263 |              0 |
+| IN-Requests-Tier2-HTTPS                    |            637 |              0 |
+| Intra-AWS-DNS-Queries                      |           6848 |              0 |
+| Inventory-ObjectsListed                    |          78716 |              0 |
+| JP-DataTransfer-Out-Bytes                  |           0.01 |              0 |
+| JP-Requests-HTTPS-Proxy                    |             10 |              0 |
+| JP-Requests-Tier1                          |             11 |              0 |
+| JP-Requests-Tier2-HTTPS                    |           1431 |              0 |
+| ME-Requests-HTTPS-Proxy                    |              2 |              0 |
+| ME-Requests-Tier2-HTTPS                    |              3 |              0 |
+| Monitoring-Automation-INT                  |        23271.6 |           0.06 |
+| NatGateway-Hours                           |             27 |           1.21 |
+| ReadCapacityUnit-Hrs                       |            872 |              0 |
+| RegionalNatGateway-Hours                   |              1 |           0.04 |
+| Requests-Tier1                             |            389 |              0 |
+| Requests-Tier2                             |          21789 |           0.01 |
+| SA-DataTransfer-Out-Bytes                  |           0.15 |              0 |
+| SA-Requests-HTTPS-Proxy                    |             31 |              0 |
+| SA-Requests-Tier1                          |             24 |              0 |
+| SA-Requests-Tier2-HTTPS                    |           2584 |              0 |
+| SAE1-CW:AlarmMonitorUsage                  |           4.86 |              0 |
+| SAE1-DataTransfer-Out-Bytes                |           0.01 |              0 |
+| SAE1-ReadCapacityUnit-Hrs                  |           1748 |              0 |
+| SAE1-Requests-Tier2                        |           1445 |              0 |
+| SAE1-WriteCapacityUnit-Hrs                 |           1748 |              0 |
+| StorageAnalytics-ObjCount                  |        23614.8 |              0 |
+| TagStorage-TagHrs                          |            1.2 |              0 |
+| TimedStorage-ByteHrs                       |           3.35 |           0.08 |
+| TimedStorage-INT-AIA-ByteHrs               |         163.63 |           0.65 |
+| TimedStorage-INT-FA-ByteHrs                |           0.02 |              0 |
+| US-DataTransfer-Out-Bytes                  |           0.28 |              0 |
+| US-Requests-HTTP-Proxy                     |              1 |              0 |
+| US-Requests-HTTPS-Proxy                    |            331 |              0 |
+| US-Requests-Tier1                          |            707 |              0 |
+| US-Requests-Tier2-HTTPS                    |          14020 |              0 |
+| USE1-AWSSecretsManager-Secrets             |           0.61 |           0.24 |
+| USE1-AWSSecretsManagerAPIRequest           |              2 |              0 |
+| USE1-Catalog-Request                       |             91 |              0 |
+| USE1-Catalog-Storage                       |           0.61 |              0 |
+| USE1-CloudFront-Out-Bytes                  |           0.45 |              0 |
+| USE1-FaceVectorsStored                     |            7.2 |              0 |
+| USE1-IssuePublicCertificateDomain          |              1 |              0 |
+| USE1-IssuePublicCertificateWildcardDomain  |              1 |              0 |
+| USE1-PublicIPv4:IdleAddress                |           0.05 |              0 |
+| USE1-PublicIPv4:InUseAddress               |          26.87 |           0.13 |
+| USE1-TimedBackupStorage-ByteHrs            |           0.01 |              0 |
+| USE2-Catalog-Request                       |             36 |              0 |
+| USE2-EBS:SnapshotUsage                     |           1.71 |           0.09 |
+| USE2-Requests-Tier1                        |              1 |              0 |
+| USW2-AW-HWU-3-1-AutoStop-User              |              1 |           9.75 |
+| USW2-AW-SWU-3                              |              1 |              0 |
+| USW2-AWSSecretsManager-Secrets             |           3.49 |            1.4 |
+| USW2-AWSSecretsManagerAPIRequest           |          50192 |           0.25 |
+| USW2-ApiGatewayMessage                     |            166 |              0 |
+| USW2-ApiGatewayMinute                      |            703 |              0 |
+| USW2-ApiGatewayRequest                     |          32761 |           0.11 |
+| USW2-Aurora:BackupUsage                    |           0.04 |              0 |
+| USW2-BoxUsage:t4g.micro                    |         174.64 |           1.27 |
+| USW2-CPUCredits:t4g                        |            0.2 |           0.01 |
+| USW2-CW:MetricMonitorUsage                 |           0.68 |              0 |
+| USW2-CW:Requests                           |              2 |              0 |
+| USW2-Catalog-Request                       |             38 |              0 |
+| USW2-CloudFront-In-Bytes                   |            0.1 |              0 |
+| USW2-CloudFront-Out-Bytes                  |           0.04 |              0 |
+| USW2-DataProcessing-Bytes                  |           0.08 |              0 |
+| USW2-DataTransfer-In-Bytes                 |           0.05 |              0 |
+| USW2-DataTransfer-Out-Bytes                |           0.28 |              0 |
+| USW2-DataTransfer-Regional-Bytes           |           1.63 |           0.01 |
+| USW2-EBS:SnapshotUsage                     |           5.13 |           0.26 |
+| USW2-EBS:VolumeUsage.gp2                   |          19.16 |           1.92 |
+| USW2-EBS:VolumeUsage.gp3                   |           7.25 |           0.58 |
+| USW2-EBSOptimized:t4g.micro                |         174.64 |              0 |
+| USW2-ExtendedSupport:Yr1-Yr2:MySQL8.0      |         527.19 |          52.72 |
+| USW2-Fargate-GB-Hours                      |         241.48 |           1.07 |
+| USW2-Fargate-vCPU-Hours:perCPU             |         120.74 |           4.89 |
+| USW2-HeavyUsage:t4g.micro                  |         310.72 |             43 |
+| USW2-InstanceUsage:db.t3.micro             |          263.6 |           4.48 |
+| USW2-InstanceUsage:db.t4g.micro            |         241.52 |           3.86 |
+| USW2-LCUUsage                              |           0.27 |              0 |
+| USW2-Lambda-GB-Second                      |         378.57 |              0 |
+| USW2-LoadBalancerUsage                     |            242 |           5.44 |
+| USW2-MP:USW2_InputTokenCount_Global-Units  |           0.34 |            0.7 |
+| USW2-MP:USW2_OutputTokenCount_Global-Units |           0.13 |           0.86 |
+| USW2-NatGateway-Bytes                      |           0.57 |           0.03 |
+| USW2-NatGateway-Hours                      |            436 |          19.62 |
+| USW2-PublicIPv4:IdleAddress                |         436.12 |           2.18 |
+| USW2-PublicIPv4:InUseAddress               |        1842.72 |           9.21 |
+| USW2-RDS:ChargedBackupUsage                |           3.15 |            0.3 |
+| USW2-RDS:GP2-Storage                       |          49.63 |           5.71 |
+| USW2-RDS:GP3-Storage                       |           6.71 |           0.77 |
+| USW2-RDS:ProxyUsage                        |         715.64 |          10.73 |
+| USW2-ReadRequestUnits                      |           76.5 |              0 |
+| USW2-Request                               |          35348 |              0 |
+| USW2-Requests-Tier1                        |         167857 |              0 |
+| USW2-Requests-Tier2                        |           9935 |              0 |
+| USW2-TimedPITRStorage-ByteHrs              |           0.01 |              0 |
+| USW2-TimedStorage-ByteHrs                  |           1.99 |           0.02 |
+| USW2-USE1-AWS-Out-Bytes                    |           3.18 |           0.06 |
+| USW2-VendedLog-Bytes                       |           0.14 |              0 |
+| USW2-VpcEndpoint-Hours                     |            873 |           8.73 |
+| USW2-WriteRequestUnits                     |            166 |              0 |
+| WriteCapacityUnit-Hrs                      |            872 |              0 |
+| ZA-Requests-HTTPS-Proxy                    |              1 |              0 |
+| ZA-Requests-Tier2-HTTPS                    |              3 |              0 |
+| us-east-1-KMS-Requests                     |              6 |              0 |
+| us-west-2-KMS-Requests                     |             31 |              0 |
++--------------------------------------------+----------------+----------------+
+
+USAGE AND COSTS OPERATIONS (without Tax)
+========================================
++----------------------------------+----------------+----------------+
+| USAGE_TYPE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|----------------------------------+----------------+----------------|
+| A                                |          14859 |              0 |
+| AAAA                             |           4952 |              0 |
+| ANY                              |             62 |              0 |
+| AllocateAddressVPC               |          436.2 |           2.18 |
+| ApiGatewayRequest                |        32761.1 |           0.11 |
+| ApiGatewayWebSocket              |            869 |              0 |
+| AssociateAddressVPC              |        1187.41 |           5.94 |
+| BackupStorage                    |           0.01 |              0 |
+| CAA                              |            156 |              0 |
+| CNAME                            |            402 |              0 |
+| CommittedThroughput              |           5240 |              0 |
+| CopyObject                       |             64 |              0 |
+| CreateDBInstance                 |           0.01 |              0 |
+| CreateDBInstance:0002            |         841.94 |          63.05 |
+| CreateDBInstance:0014            |         249.85 |           4.79 |
+| CreateDBInstance:0016            |           0.04 |              0 |
+| CreateDBProxy:0002               |         715.64 |          10.73 |
+| CreateSnapshot                   |          10.02 |            0.5 |
+| CreateVolume-Gp2                 |          19.16 |           1.92 |
+| CreateVolume-Gp3                 |           8.11 |           0.65 |
+| DELETE                           |             44 |              0 |
+| DNSKEY                           |           3053 |              0 |
+| DeleteMessageBatch               |            144 |              0 |
+| DeleteSecret                     |              5 |              0 |
+| DescribeKey                      |              3 |              0 |
+| DescribeNetworkInterfaces        |         263.72 |           1.32 |
+| DescribeSecret                   |             33 |              0 |
+| EBS Snapshot Copy                |           3.18 |           0.06 |
+| FaceVectorsStored                |            7.2 |              0 |
+| FargateTask                      |         362.21 |           5.96 |
+| GET                              |        42488.8 |              0 |
+| GeneralPurposeBuckets            |            0.6 |              0 |
+| GetDataProtectionPolicy          |              9 |              0 |
+| GetObject                        |          28.01 |              0 |
+| GetQueueAttributes               |          10198 |              0 |
+| GetResourcePolicy                |              5 |              0 |
+| GetSecretValue                   |          50135 |           0.25 |
+| GetTopicAttributes               |              9 |              0 |
+| HEAD                             |             78 |              0 |
+| HINFO                            |              5 |              0 |
+| HTTPS                            |            662 |              0 |
+| HeadBucket                       |             45 |              0 |
+| HeadObject                       |             27 |              0 |
+| HostedZone                       |              4 |              2 |
+| Hourly                           |         175.49 |              0 |
+| HourlyStorageMetering            |           1.65 |              0 |
+| IntelligentTieringAIAStorage     |         163.63 |           0.65 |
+| IntelligentTieringFAStorage      |           0.02 |              0 |
+| IntelligentTieringStorage        |        23271.6 |           0.06 |
+| InterZone-In                     |           0.65 |              0 |
+| InterZone-Out                    |           0.59 |              0 |
+| Inventory                        |          78716 |              0 |
+| Invoke                           |        35726.6 |              0 |
+| InvokeModelInference             |           0.47 |           1.55 |
+| InvokeModelStreamingInference    |              0 |           0.01 |
+| List                             |              4 |              0 |
+| ListAliases                      |             23 |              0 |
+| ListAllMyBuckets                 |             16 |              0 |
+| ListAllMyDirectoryBuckets        |              4 |              0 |
+| ListBucket                       |             91 |              0 |
+| ListBucketTags                   |              1 |              0 |
+| ListKeys                         |             11 |              0 |
+| ListLensConfigurations           |              9 |              0 |
+| ListMRAPs                        |              2 |              0 |
+| ListMetrics                      |              3 |              0 |
+| ListQueueTags                    |             12 |              0 |
+| ListSecrets                      |             16 |              0 |
+| ListStorageLensGroups            |              4 |              0 |
+| ListSubscriptionsByTopic         |              9 |              0 |
+| ListTagsForResource              |              9 |              0 |
+| ListTopics                       |              3 |              0 |
+| LoadBalancing                    |           0.16 |              0 |
+| LoadBalancing-PublicIP-In        |              0 |              0 |
+| LoadBalancing-PublicIP-Out       |              0 |              0 |
+| LoadBalancing:Application        |         242.27 |           5.45 |
+| MX                               |           1270 |              0 |
+| MetricStorage:AWS/ApiGateway     |           0.68 |              0 |
+| NAPTR                            |              3 |              0 |
+| NS                               |           1305 |              0 |
+| NatGateway                       |         463.57 |          20.86 |
+| Not Applicable                   |           0.02 |              0 |
+| Notification                     |              3 |              0 |
+| ObjectTagCount                   |            1.2 |              0 |
+| POST                             |        3961.01 |              0 |
+| PTR                              |             10 |              0 |
+| PayPerRequestThroughput          |          242.5 |              0 |
+| PublicIP-In                      |           0.39 |              0 |
+| PublicIP-Out                     |              0 |              0 |
+| Publish                          |              1 |              0 |
+| PutLogEvents                     |           0.22 |              0 |
+| PutObject                        |            163 |              0 |
+| REQUEST_CERTIFICATE              |              2 |              0 |
+| ReadAccelerate                   |              1 |              0 |
+| ReadBucketAbac                   |              1 |              0 |
+| ReadBucketIntelligentTiering     |              1 |              0 |
+| ReadBucketOwnershipControls      |              4 |              0 |
+| ReadBucketServerSideEncryption   |             87 |              0 |
+| ReadBucketWebsite                |              1 |              0 |
+| ReadLocation                     |              2 |              0 |
+| ReadLogProps                     |             87 |              0 |
+| ReadNotificationProps            |              1 |              0 |
+| ReadRequestPaymentProps          |              1 |              0 |
+| ReadVersioningProps              |              5 |              0 |
+| Receive                          |         157317 |              0 |
+| RegionalNatGateway               |              1 |           0.04 |
+| Request                          |            165 |              0 |
+| RunInstances                     |        1216.79 |          89.36 |
+| S3.STORAGE_CLASS_ANALYSIS.OBJECT |        23614.8 |              0 |
+| SOA                              |            610 |              0 |
+| SPF                              |              3 |              0 |
+| SRV                              |             73 |              0 |
+| SSHFP                            |              1 |              0 |
+| SVCB                             |              5 |              0 |
+| SecretUsage                      |            4.1 |           1.64 |
+| Send                             |            179 |              0 |
+| StandardIASizeOverhead           |              0 |              0 |
+| StandardPitrBackupStorage        |           0.01 |              0 |
+| StandardStorage                  |            3.5 |           0.08 |
+| Storage                          |           0.61 |              0 |
+| T4GCPUCredits                    |           0.26 |           0.01 |
+| TLSA                             |              3 |              0 |
+| TXT                              |           1394 |              0 |
+| TimedStorage-ByteHrs             |           0.03 |              0 |
+| UNSUPPORTED                      |             12 |              0 |
+| USW2-TimedStorage-ByteHrs        |           0.17 |           0.02 |
+| Unknown                          |           7.89 |              0 |
+| VpcEndpoint                      |            873 |           8.73 |
+| WebsiteGetObject                 |        32823.5 |           0.01 |
+| WebsiteHeadObject                |             54 |              0 |
+| none                             |              2 |           9.75 |
++----------------------------------+----------------+----------------+
+
+DAILY COSTS PER SERVICE (without Tax)
+=====================================
++--------------------------------------------+------------+---------+
+| PRODUCT_CODE                               | DATE       |   TOTAL |
+|--------------------------------------------+------------+---------|
+| AWS Secrets Manager                        | 2026-09-01 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-02 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-03 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-04 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-05 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-06 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-07 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-08 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-09 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-10 |    0.13 |
+| AWS Secrets Manager                        | 2026-09-11 |    0.07 |
+| AWS Secrets Manager                        | 2026-09-12 |    0.07 |
+| AWS Secrets Manager                        | 2026-09-13 |    0.07 |
+| AWS Secrets Manager                        | 2026-09-14 |    0.07 |
+| AWS Secrets Manager                        | 2026-09-15 |    0.07 |
+| AWS Secrets Manager                        | 2026-09-16 |    0.07 |
+| AWS Secrets Manager                        | 2026-09-17 |    0.07 |
+| AWS Secrets Manager                        | 2026-09-18 |    0.07 |
+| AWS Secrets Manager                        | 2026-09-19 |    0.01 |
+| Amazon API Gateway                         | 2026-09-01 |    0.01 |
+| Amazon API Gateway                         | 2026-09-02 |    0.01 |
+| Amazon API Gateway                         | 2026-09-03 |    0.01 |
+| Amazon API Gateway                         | 2026-09-04 |    0.01 |
+| Amazon API Gateway                         | 2026-09-08 |    0.01 |
+| Amazon API Gateway                         | 2026-09-09 |    0.01 |
+| Amazon API Gateway                         | 2026-09-10 |    0.01 |
+| Amazon API Gateway                         | 2026-09-11 |    0.01 |
+| Amazon API Gateway                         | 2026-09-14 |    0.01 |
+| Amazon API Gateway                         | 2026-09-15 |    0.01 |
+| Amazon API Gateway                         | 2026-09-16 |    0.01 |
+| Amazon API Gateway                         | 2026-09-17 |    0.01 |
+| Amazon API Gateway                         | 2026-09-18 |    0.01 |
+| Amazon Elastic Compute Cloud               | 2026-09-01 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-02 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-03 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-04 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-05 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-06 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-07 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-08 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-09 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-10 |    1.21 |
+| Amazon Elastic Compute Cloud               | 2026-09-11 |    1.31 |
+| Amazon Elastic Compute Cloud               | 2026-09-12 |     1.5 |
+| Amazon Elastic Compute Cloud               | 2026-09-13 |     1.5 |
+| Amazon Elastic Compute Cloud               | 2026-09-14 |     1.5 |
+| Amazon Elastic Compute Cloud               | 2026-09-15 |     1.5 |
+| Amazon Elastic Compute Cloud               | 2026-09-16 |     1.5 |
+| Amazon Elastic Compute Cloud               | 2026-09-17 |     1.5 |
+| Amazon Elastic Compute Cloud               | 2026-09-18 |   88.54 |
+| Amazon Elastic Compute Cloud               | 2026-09-19 |    0.36 |
+| Amazon Elastic Container Service           | 2026-09-01 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-02 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-03 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-04 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-05 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-06 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-07 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-08 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-09 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-10 |    0.59 |
+| Amazon Elastic Container Service           | 2026-09-11 |    0.04 |
+| Amazon Relational Database Service         | 2026-09-01 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-02 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-03 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-04 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-05 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-06 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-07 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-08 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-09 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-10 |    6.78 |
+| Amazon Relational Database Service         | 2026-09-11 |    6.24 |
+| Amazon Relational Database Service         | 2026-09-12 |    1.11 |
+| Amazon Relational Database Service         | 2026-09-13 |     1.1 |
+| Amazon Relational Database Service         | 2026-09-14 |     1.1 |
+| Amazon Relational Database Service         | 2026-09-15 |    1.07 |
+| Amazon Relational Database Service         | 2026-09-16 |    0.05 |
+| Amazon Relational Database Service         | 2026-09-17 |    0.05 |
+| Amazon Relational Database Service         | 2026-09-18 |    0.05 |
+| Amazon Route 53                            | 2026-09-01 |       2 |
+| Amazon Simple Storage Service              | 2026-09-01 |    0.05 |
+| Amazon Simple Storage Service              | 2026-09-02 |    0.05 |
+| Amazon Simple Storage Service              | 2026-09-03 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-04 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-05 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-06 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-07 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-08 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-09 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-10 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-11 |    0.05 |
+| Amazon Simple Storage Service              | 2026-09-12 |    0.05 |
+| Amazon Simple Storage Service              | 2026-09-13 |    0.05 |
+| Amazon Simple Storage Service              | 2026-09-14 |    0.05 |
+| Amazon Simple Storage Service              | 2026-09-15 |    0.05 |
+| Amazon Simple Storage Service              | 2026-09-16 |    0.04 |
+| Amazon Simple Storage Service              | 2026-09-17 |    0.05 |
+| Amazon Simple Storage Service              | 2026-09-18 |    0.04 |
+| Amazon Virtual Private Cloud               | 2026-09-01 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-02 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-03 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-04 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-05 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-06 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-07 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-08 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-09 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-10 |    1.32 |
+| Amazon Virtual Private Cloud               | 2026-09-11 |     0.9 |
+| Amazon Virtual Private Cloud               | 2026-09-12 |    0.84 |
+| Amazon Virtual Private Cloud               | 2026-09-13 |    0.84 |
+| Amazon Virtual Private Cloud               | 2026-09-14 |    0.84 |
+| Amazon Virtual Private Cloud               | 2026-09-15 |    0.84 |
+| Amazon Virtual Private Cloud               | 2026-09-16 |    0.84 |
+| Amazon Virtual Private Cloud               | 2026-09-17 |    0.84 |
+| Amazon Virtual Private Cloud               | 2026-09-18 |    0.95 |
+| Amazon Virtual Private Cloud               | 2026-09-19 |    0.17 |
+| Amazon WorkSpaces                          | 2026-09-01 |    9.75 |
+| Claude Haiku 4.5 (Amazon Bedrock Edition)  | 2026-09-16 |    0.69 |
+| Claude Sonnet 4.6 (Amazon Bedrock Edition) | 2026-09-15 |    0.07 |
+| Claude Sonnet 4.6 (Amazon Bedrock Edition) | 2026-09-16 |    0.47 |
+| Claude Sonnet 4.6 (Amazon Bedrock Edition) | 2026-09-17 |    0.33 |
+| Elastic Load Balancing                     | 2026-09-01 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-02 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-03 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-04 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-05 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-06 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-07 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-08 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-09 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-10 |    0.54 |
+| Elastic Load Balancing                     | 2026-09-11 |    0.05 |
++--------------------------------------------+------------+---------+
+
+DAILY COSTS PER SERVICE - PIVOT (without Tax)
+=============================================
++--------------------------------------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+------+------+------+------+------+------+------+-------+------+---------+
+| PRODUCT_CODE                               |    01 |    02 |    03 |    04 |    05 |    06 |    07 |    08 |    09 |    10 |   11 |   12 |   13 |   14 |   15 |   16 |   17 |    18 |   19 |   TOTAL |
+|--------------------------------------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+------+------+------+------+------+------+------+-------+------+---------|
+| Amazon Elastic Compute Cloud               |  1.21 |  1.21 |  1.21 |  1.21 |  1.21 |  1.21 |  1.21 |  1.21 |  1.21 |  1.21 | 1.31 | 1.50 | 1.50 | 1.50 | 1.50 | 1.50 | 1.50 | 88.54 | 0.36 |  111.32 |
+| Amazon Relational Database Service         |  6.78 |  6.78 |  6.78 |  6.78 |  6.78 |  6.78 |  6.78 |  6.78 |  6.78 |  6.78 | 6.24 | 1.11 | 1.10 | 1.10 | 1.07 | 0.05 | 0.05 |  0.05 |      |   78.58 |
+| Amazon Virtual Private Cloud               |  1.32 |  1.32 |  1.32 |  1.32 |  1.32 |  1.32 |  1.32 |  1.32 |  1.32 |  1.32 | 0.90 | 0.84 | 0.84 | 0.84 | 0.84 | 0.84 | 0.84 |  0.95 | 0.17 |   20.26 |
+| Amazon WorkSpaces                          |  9.75 |       |       |       |       |       |       |       |       |       |      |      |      |      |      |      |      |       |      |    9.75 |
+| Amazon Elastic Container Service           |  0.59 |  0.59 |  0.59 |  0.59 |  0.59 |  0.59 |  0.59 |  0.59 |  0.59 |  0.59 | 0.04 |      |      |      |      |      |      |       |      |    5.96 |
+| Elastic Load Balancing                     |  0.54 |  0.54 |  0.54 |  0.54 |  0.54 |  0.54 |  0.54 |  0.54 |  0.54 |  0.54 | 0.05 |      |      |      |      |      |      |       |      |    5.45 |
+| Amazon Route 53                            |  2.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |  0.00 | 0.00 |    2.01 |
+| AWS Secrets Manager                        |  0.13 |  0.13 |  0.13 |  0.13 |  0.13 |  0.13 |  0.13 |  0.13 |  0.13 |  0.13 | 0.07 | 0.07 | 0.07 | 0.07 | 0.07 | 0.07 | 0.07 |  0.07 | 0.01 |    1.89 |
+| Claude Sonnet 4.6 (Amazon Bedrock Edition) |       |       |       |       |       |       |       |       |       |       |      |      |      |      | 0.07 | 0.47 | 0.33 |       |      |    0.87 |
+| Amazon Simple Storage Service              |  0.05 |  0.05 |  0.04 |  0.04 |  0.04 |  0.04 |  0.04 |  0.04 |  0.04 |  0.04 | 0.05 | 0.05 | 0.05 | 0.05 | 0.05 | 0.04 | 0.05 |  0.04 | 0.00 |    0.81 |
+| Claude Haiku 4.5 (Amazon Bedrock Edition)  |       |       |       |       |       |       |       |       |       |       |      |      |      |      |      | 0.69 |      |       |      |    0.69 |
+| Amazon API Gateway                         |  0.01 |  0.01 |  0.01 |  0.01 |  0.00 |  0.00 |  0.00 |  0.01 |  0.01 |  0.01 | 0.01 | 0.00 | 0.00 | 0.01 | 0.01 | 0.01 | 0.01 |  0.01 |      |    0.12 |
+| Amazon EC2 Container Registry (ECR)        |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 |  0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |  0.00 | 0.00 |    0.02 |
+| TOTAL                                      | 22.39 | 10.64 | 10.64 | 10.63 | 10.63 | 10.63 | 10.63 | 10.63 | 10.64 | 10.63 | 8.66 | 3.56 | 3.55 | 3.56 | 3.60 | 3.66 | 2.83 | 89.66 | 0.54 |  237.72 |
++--------------------------------------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+------+------+------+------+------+------+------+-------+------+---------+
+
+SUBTOTAL PER PRODUCT AND USAGE TYPE (without Tax)
+=================================================
++--------------------------------------------+--------------------------------------------+----------------+----------------+
+| PRODUCT_CODE                               | USAGE_TYPE                                 |   USAGE_AMOUNT |   BLENDED_COST |
+|--------------------------------------------+--------------------------------------------+----------------+----------------|
+| AWS Certificate Manager                    | USE1-IssuePublicCertificateDomain          |              1 |              0 |
+| AWS Certificate Manager                    | USE1-IssuePublicCertificateWildcardDomain  |              1 |              0 |
+| AWS Glue                                   | USE1-Catalog-Request                       |             91 |              0 |
+| AWS Glue                                   | USE1-Catalog-Storage                       |           0.61 |              0 |
+| AWS Glue                                   | USE2-Catalog-Request                       |             36 |              0 |
+| AWS Glue                                   | USW2-Catalog-Request                       |             38 |              0 |
+| AWS Key Management Service                 | us-east-1-KMS-Requests                     |              6 |              0 |
+| AWS Key Management Service                 | us-west-2-KMS-Requests                     |             31 |              0 |
+| AWS Lambda                                 | USW2-Lambda-GB-Second                      |         378.57 |              0 |
+| AWS Lambda                                 | USW2-Request                               |          35348 |              0 |
+| AWS Secrets Manager                        | USE1-AWSSecretsManager-Secrets             |           0.61 |           0.24 |
+| AWS Secrets Manager                        | USE1-AWSSecretsManagerAPIRequest           |              2 |              0 |
+| AWS Secrets Manager                        | USW2-AWSSecretsManager-Secrets             |           3.49 |            1.4 |
+| AWS Secrets Manager                        | USW2-AWSSecretsManagerAPIRequest           |          50192 |           0.25 |
+| Amazon API Gateway                         | USW2-ApiGatewayMessage                     |            166 |              0 |
+| Amazon API Gateway                         | USW2-ApiGatewayMinute                      |            703 |              0 |
+| Amazon API Gateway                         | USW2-ApiGatewayRequest                     |          32761 |           0.11 |
+| Amazon API Gateway                         | USW2-DataTransfer-Out-Bytes                |           0.12 |              0 |
+| Amazon CloudFront                          | AP-DataTransfer-Out-Bytes                  |           0.08 |              0 |
+| Amazon CloudFront                          | AP-Requests-HTTPS-Proxy                    |             65 |              0 |
+| Amazon CloudFront                          | AP-Requests-Tier1                          |           1035 |              0 |
+| Amazon CloudFront                          | AP-Requests-Tier2-HTTPS                    |           3324 |              0 |
+| Amazon CloudFront                          | AU-Requests-Tier2-HTTPS                    |              6 |              0 |
+| Amazon CloudFront                          | CA-DataTransfer-Out-Bytes                  |           0.04 |              0 |
+| Amazon CloudFront                          | CA-Requests-HTTPS-Proxy                    |              1 |              0 |
+| Amazon CloudFront                          | CA-Requests-Tier1                          |           2439 |              0 |
+| Amazon CloudFront                          | CA-Requests-Tier2-HTTPS                    |           3317 |              0 |
+| Amazon CloudFront                          | EU-DataTransfer-Out-Bytes                  |           0.18 |              0 |
+| Amazon CloudFront                          | EU-Requests-HTTP-Proxy                     |            183 |              0 |
+| Amazon CloudFront                          | EU-Requests-HTTPS-Proxy                    |           3362 |              0 |
+| Amazon CloudFront                          | EU-Requests-Tier1                          |           1441 |              0 |
+| Amazon CloudFront                          | EU-Requests-Tier2-HTTPS                    |          11321 |              0 |
+| Amazon CloudFront                          | IN-DataTransfer-Out-Bytes                  |           0.01 |              0 |
+| Amazon CloudFront                          | IN-Requests-HTTPS-Proxy                    |             18 |              0 |
+| Amazon CloudFront                          | IN-Requests-Tier1                          |            263 |              0 |
+| Amazon CloudFront                          | IN-Requests-Tier2-HTTPS                    |            637 |              0 |
+| Amazon CloudFront                          | JP-DataTransfer-Out-Bytes                  |           0.01 |              0 |
+| Amazon CloudFront                          | JP-Requests-HTTPS-Proxy                    |             10 |              0 |
+| Amazon CloudFront                          | JP-Requests-Tier1                          |             11 |              0 |
+| Amazon CloudFront                          | JP-Requests-Tier2-HTTPS                    |           1431 |              0 |
+| Amazon CloudFront                          | ME-Requests-HTTPS-Proxy                    |              2 |              0 |
+| Amazon CloudFront                          | ME-Requests-Tier2-HTTPS                    |              3 |              0 |
+| Amazon CloudFront                          | SA-DataTransfer-Out-Bytes                  |           0.15 |              0 |
+| Amazon CloudFront                          | SA-Requests-HTTPS-Proxy                    |             31 |              0 |
+| Amazon CloudFront                          | SA-Requests-Tier1                          |             24 |              0 |
+| Amazon CloudFront                          | SA-Requests-Tier2-HTTPS                    |           2584 |              0 |
+| Amazon CloudFront                          | US-DataTransfer-Out-Bytes                  |           0.28 |              0 |
+| Amazon CloudFront                          | US-Requests-HTTP-Proxy                     |              1 |              0 |
+| Amazon CloudFront                          | US-Requests-HTTPS-Proxy                    |            331 |              0 |
+| Amazon CloudFront                          | US-Requests-Tier1                          |            707 |              0 |
+| Amazon CloudFront                          | US-Requests-Tier2-HTTPS                    |          14020 |              0 |
+| Amazon CloudFront                          | ZA-Requests-HTTPS-Proxy                    |              1 |              0 |
+| Amazon CloudFront                          | ZA-Requests-Tier2-HTTPS                    |              3 |              0 |
+| Amazon DynamoDB                            | ReadCapacityUnit-Hrs                       |            872 |              0 |
+| Amazon DynamoDB                            | SAE1-ReadCapacityUnit-Hrs                  |           1748 |              0 |
+| Amazon DynamoDB                            | SAE1-WriteCapacityUnit-Hrs                 |           1748 |              0 |
+| Amazon DynamoDB                            | USE1-TimedBackupStorage-ByteHrs            |           0.01 |              0 |
+| Amazon DynamoDB                            | USW2-ReadRequestUnits                      |           76.5 |              0 |
+| Amazon DynamoDB                            | USW2-TimedPITRStorage-ByteHrs              |           0.01 |              0 |
+| Amazon DynamoDB                            | USW2-TimedStorage-ByteHrs                  |           0.05 |              0 |
+| Amazon DynamoDB                            | USW2-WriteRequestUnits                     |            166 |              0 |
+| Amazon DynamoDB                            | WriteCapacityUnit-Hrs                      |            872 |              0 |
+| Amazon EC2 Container Registry (ECR)        | TimedStorage-ByteHrs                       |           0.03 |              0 |
+| Amazon EC2 Container Registry (ECR)        | USW2-TimedStorage-ByteHrs                  |           0.17 |           0.02 |
+| Amazon Elastic Compute Cloud               | BoxUsage:t4g.micro                         |           0.85 |              0 |
+| Amazon Elastic Compute Cloud               | CPUCredits:t4g                             |           0.05 |              0 |
+| Amazon Elastic Compute Cloud               | EBS:SnapshotUsage                          |           3.17 |           0.16 |
+| Amazon Elastic Compute Cloud               | EBS:VolumeUsage.gp3                        |           0.86 |           0.07 |
+| Amazon Elastic Compute Cloud               | EBSOptimized:t4g.micro                     |           0.85 |              0 |
+| Amazon Elastic Compute Cloud               | HeavyUsage:t4g.micro                       |         312.02 |             43 |
+| Amazon Elastic Compute Cloud               | NatGateway-Hours                           |             27 |           1.21 |
+| Amazon Elastic Compute Cloud               | RegionalNatGateway-Hours                   |              1 |           0.04 |
+| Amazon Elastic Compute Cloud               | USE2-EBS:SnapshotUsage                     |           1.71 |           0.09 |
+| Amazon Elastic Compute Cloud               | USW2-BoxUsage:t4g.micro                    |         174.64 |           1.27 |
+| Amazon Elastic Compute Cloud               | USW2-CPUCredits:t4g                        |            0.2 |           0.01 |
+| Amazon Elastic Compute Cloud               | USW2-CloudFront-In-Bytes                   |            0.1 |              0 |
+| Amazon Elastic Compute Cloud               | USW2-DataTransfer-In-Bytes                 |           0.04 |              0 |
+| Amazon Elastic Compute Cloud               | USW2-DataTransfer-Regional-Bytes           |           1.63 |           0.01 |
+| Amazon Elastic Compute Cloud               | USW2-EBS:SnapshotUsage                     |           5.13 |           0.26 |
+| Amazon Elastic Compute Cloud               | USW2-EBS:VolumeUsage.gp2                   |          19.16 |           1.92 |
+| Amazon Elastic Compute Cloud               | USW2-EBS:VolumeUsage.gp3                   |           7.25 |           0.58 |
+| Amazon Elastic Compute Cloud               | USW2-EBSOptimized:t4g.micro                |         174.64 |              0 |
+| Amazon Elastic Compute Cloud               | USW2-HeavyUsage:t4g.micro                  |         310.72 |             43 |
+| Amazon Elastic Compute Cloud               | USW2-NatGateway-Bytes                      |           0.57 |           0.03 |
+| Amazon Elastic Compute Cloud               | USW2-NatGateway-Hours                      |            436 |          19.62 |
+| Amazon Elastic Compute Cloud               | USW2-USE1-AWS-Out-Bytes                    |           3.18 |           0.06 |
+| Amazon Elastic Container Service           | USW2-Fargate-GB-Hours                      |         241.48 |           1.07 |
+| Amazon Elastic Container Service           | USW2-Fargate-vCPU-Hours:perCPU             |         120.74 |           4.89 |
+| Amazon Rekognition                         | USE1-FaceVectorsStored                     |            7.2 |              0 |
+| Amazon Relational Database Service         | USW2-Aurora:BackupUsage                    |           0.04 |              0 |
+| Amazon Relational Database Service         | USW2-DataTransfer-In-Bytes                 |           0.01 |              0 |
+| Amazon Relational Database Service         | USW2-DataTransfer-Out-Bytes                |           0.01 |              0 |
+| Amazon Relational Database Service         | USW2-ExtendedSupport:Yr1-Yr2:MySQL8.0      |         527.19 |          52.72 |
+| Amazon Relational Database Service         | USW2-InstanceUsage:db.t3.micro             |          263.6 |           4.48 |
+| Amazon Relational Database Service         | USW2-InstanceUsage:db.t4g.micro            |         241.52 |           3.86 |
+| Amazon Relational Database Service         | USW2-RDS:ChargedBackupUsage                |           3.15 |            0.3 |
+| Amazon Relational Database Service         | USW2-RDS:GP2-Storage                       |          49.63 |           5.71 |
+| Amazon Relational Database Service         | USW2-RDS:GP3-Storage                       |           6.71 |           0.77 |
+| Amazon Relational Database Service         | USW2-RDS:ProxyUsage                        |         715.64 |          10.73 |
+| Amazon Route 53                            | DNS-Queries                                |          21992 |           0.01 |
+| Amazon Route 53                            | HostedZone                                 |              4 |              2 |
+| Amazon Route 53                            | Intra-AWS-DNS-Queries                      |           6848 |              0 |
+| Amazon Simple Notification Service         | DeliveryAttempts-SMTP                      |              3 |              0 |
+| Amazon Simple Notification Service         | Requests-Tier1                             |             40 |              0 |
+| Amazon Simple Queue Service                | USW2-Requests-Tier1                        |         167854 |              0 |
+| Amazon Simple Storage Service              | DataTransfer-Out-Bytes                     |           0.01 |              0 |
+| Amazon Simple Storage Service              | Global-Bucket-Hrs-FreeTier                 |            0.6 |              0 |
+| Amazon Simple Storage Service              | Inventory-ObjectsListed                    |          78716 |              0 |
+| Amazon Simple Storage Service              | Monitoring-Automation-INT                  |        23271.6 |           0.06 |
+| Amazon Simple Storage Service              | Requests-Tier1                             |            349 |              0 |
+| Amazon Simple Storage Service              | Requests-Tier2                             |          21789 |           0.01 |
+| Amazon Simple Storage Service              | SAE1-DataTransfer-Out-Bytes                |           0.01 |              0 |
+| Amazon Simple Storage Service              | SAE1-Requests-Tier2                        |           1445 |              0 |
+| Amazon Simple Storage Service              | StorageAnalytics-ObjCount                  |        23614.8 |              0 |
+| Amazon Simple Storage Service              | TagStorage-TagHrs                          |            1.2 |              0 |
+| Amazon Simple Storage Service              | TimedStorage-ByteHrs                       |           3.32 |           0.08 |
+| Amazon Simple Storage Service              | TimedStorage-INT-AIA-ByteHrs               |         163.63 |           0.65 |
+| Amazon Simple Storage Service              | TimedStorage-INT-FA-ByteHrs                |           0.02 |              0 |
+| Amazon Simple Storage Service              | USE1-CloudFront-Out-Bytes                  |           0.45 |              0 |
+| Amazon Simple Storage Service              | USE2-Requests-Tier1                        |              1 |              0 |
+| Amazon Simple Storage Service              | USW2-CloudFront-Out-Bytes                  |           0.04 |              0 |
+| Amazon Simple Storage Service              | USW2-Requests-Tier1                        |              3 |              0 |
+| Amazon Simple Storage Service              | USW2-Requests-Tier2                        |           9935 |              0 |
+| Amazon Simple Storage Service              | USW2-TimedStorage-ByteHrs                  |           0.12 |              0 |
+| Amazon Virtual Private Cloud               | USE1-PublicIPv4:IdleAddress                |           0.05 |              0 |
+| Amazon Virtual Private Cloud               | USE1-PublicIPv4:InUseAddress               |          26.87 |           0.13 |
+| Amazon Virtual Private Cloud               | USW2-PublicIPv4:IdleAddress                |         436.12 |           2.18 |
+| Amazon Virtual Private Cloud               | USW2-PublicIPv4:InUseAddress               |        1842.72 |           9.21 |
+| Amazon Virtual Private Cloud               | USW2-VpcEndpoint-Hours                     |            873 |           8.73 |
+| Amazon WorkSpaces                          | USW2-AW-HWU-3-1-AutoStop-User              |              1 |           9.75 |
+| Amazon WorkSpaces                          | USW2-AW-SWU-3                              |              1 |              0 |
+| AmazonCloudWatch                           | CW:AlarmMonitorUsage                       |           3.03 |              0 |
+| AmazonCloudWatch                           | CW:Requests                                |              1 |              0 |
+| AmazonCloudWatch                           | SAE1-CW:AlarmMonitorUsage                  |           4.86 |              0 |
+| AmazonCloudWatch                           | USW2-CW:MetricMonitorUsage                 |           0.68 |              0 |
+| AmazonCloudWatch                           | USW2-CW:Requests                           |              2 |              0 |
+| AmazonCloudWatch                           | USW2-DataProcessing-Bytes                  |           0.08 |              0 |
+| AmazonCloudWatch                           | USW2-TimedStorage-ByteHrs                  |           1.65 |              0 |
+| AmazonCloudWatch                           | USW2-VendedLog-Bytes                       |           0.14 |              0 |
+| Claude Haiku 4.5 (Amazon Bedrock Edition)  | USW2-MP:USW2_InputTokenCount_Global-Units  |           0.16 |           0.16 |
+| Claude Haiku 4.5 (Amazon Bedrock Edition)  | USW2-MP:USW2_OutputTokenCount_Global-Units |           0.11 |           0.53 |
+| Claude Sonnet 4.6 (Amazon Bedrock Edition) | USW2-MP:USW2_InputTokenCount_Global-Units  |           0.18 |           0.54 |
+| Claude Sonnet 4.6 (Amazon Bedrock Edition) | USW2-MP:USW2_OutputTokenCount_Global-Units |           0.02 |           0.33 |
+| Elastic Load Balancing                     | USW2-DataTransfer-Out-Bytes                |           0.16 |              0 |
+| Elastic Load Balancing                     | USW2-LCUUsage                              |           0.27 |              0 |
+| Elastic Load Balancing                     | USW2-LoadBalancerUsage                     |            242 |           5.44 |
++--------------------------------------------+--------------------------------------------+----------------+----------------+
+
+SUBTOTAL PER PRODUCT AND OPERATION (without Tax)
+================================================
++--------------------------------------------+----------------------------------+----------------+----------------+
+| PRODUCT_CODE                               | USAGE_TYPE                       |   USAGE_AMOUNT |   BLENDED_COST |
+|--------------------------------------------+----------------------------------+----------------+----------------|
+| AWS Certificate Manager                    | REQUEST_CERTIFICATE              |              2 |              0 |
+| AWS Glue                                   | Request                          |            165 |              0 |
+| AWS Glue                                   | Storage                          |           0.61 |              0 |
+| AWS Key Management Service                 | DescribeKey                      |              3 |              0 |
+| AWS Key Management Service                 | ListAliases                      |             23 |              0 |
+| AWS Key Management Service                 | ListKeys                         |             11 |              0 |
+| AWS Lambda                                 | Invoke                           |        35726.6 |              0 |
+| AWS Secrets Manager                        | DeleteSecret                     |              5 |              0 |
+| AWS Secrets Manager                        | DescribeSecret                   |             33 |              0 |
+| AWS Secrets Manager                        | GetResourcePolicy                |              5 |              0 |
+| AWS Secrets Manager                        | GetSecretValue                   |          50135 |           0.25 |
+| AWS Secrets Manager                        | ListSecrets                      |             16 |              0 |
+| AWS Secrets Manager                        | SecretUsage                      |            4.1 |           1.64 |
+| Amazon API Gateway                         | ApiGatewayRequest                |        32761.1 |           0.11 |
+| Amazon API Gateway                         | ApiGatewayWebSocket              |            869 |              0 |
+| Amazon CloudFront                          | DELETE                           |             44 |              0 |
+| Amazon CloudFront                          | GET                              |        42488.8 |              0 |
+| Amazon CloudFront                          | HEAD                             |             78 |              0 |
+| Amazon CloudFront                          | POST                             |        3961.01 |              0 |
+| Amazon DynamoDB                            | BackupStorage                    |           0.01 |              0 |
+| Amazon DynamoDB                            | CommittedThroughput              |           5240 |              0 |
+| Amazon DynamoDB                            | PayPerRequestThroughput          |          242.5 |              0 |
+| Amazon DynamoDB                            | StandardPitrBackupStorage        |           0.01 |              0 |
+| Amazon DynamoDB                            | StandardStorage                  |           0.05 |              0 |
+| Amazon EC2 Container Registry (ECR)        | TimedStorage-ByteHrs             |           0.03 |              0 |
+| Amazon EC2 Container Registry (ECR)        | USW2-TimedStorage-ByteHrs        |           0.17 |           0.02 |
+| Amazon Elastic Compute Cloud               | CreateSnapshot                   |          10.02 |            0.5 |
+| Amazon Elastic Compute Cloud               | CreateVolume-Gp2                 |          19.16 |           1.92 |
+| Amazon Elastic Compute Cloud               | CreateVolume-Gp3                 |           8.11 |           0.65 |
+| Amazon Elastic Compute Cloud               | EBS Snapshot Copy                |           3.18 |           0.06 |
+| Amazon Elastic Compute Cloud               | Hourly                           |         175.49 |              0 |
+| Amazon Elastic Compute Cloud               | InterZone-In                     |           0.65 |              0 |
+| Amazon Elastic Compute Cloud               | InterZone-Out                    |           0.59 |              0 |
+| Amazon Elastic Compute Cloud               | NatGateway                       |         463.57 |          20.86 |
+| Amazon Elastic Compute Cloud               | PublicIP-In                      |           0.39 |              0 |
+| Amazon Elastic Compute Cloud               | RegionalNatGateway               |              1 |           0.04 |
+| Amazon Elastic Compute Cloud               | RunInstances                     |         798.37 |          87.27 |
+| Amazon Elastic Compute Cloud               | T4GCPUCredits                    |           0.26 |           0.01 |
+| Amazon Elastic Container Service           | FargateTask                      |         362.21 |           5.96 |
+| Amazon Rekognition                         | FaceVectorsStored                |            7.2 |              0 |
+| Amazon Relational Database Service         | CreateDBInstance                 |           0.01 |              0 |
+| Amazon Relational Database Service         | CreateDBInstance:0002            |         841.94 |          63.05 |
+| Amazon Relational Database Service         | CreateDBInstance:0014            |         249.85 |           4.79 |
+| Amazon Relational Database Service         | CreateDBInstance:0016            |           0.04 |              0 |
+| Amazon Relational Database Service         | CreateDBProxy:0002               |         715.64 |          10.73 |
+| Amazon Relational Database Service         | Not Applicable                   |           0.02 |              0 |
+| Amazon Route 53                            | A                                |          14859 |              0 |
+| Amazon Route 53                            | AAAA                             |           4952 |              0 |
+| Amazon Route 53                            | ANY                              |             62 |              0 |
+| Amazon Route 53                            | CAA                              |            156 |              0 |
+| Amazon Route 53                            | CNAME                            |            402 |              0 |
+| Amazon Route 53                            | DNSKEY                           |           3053 |              0 |
+| Amazon Route 53                            | HINFO                            |              5 |              0 |
+| Amazon Route 53                            | HTTPS                            |            662 |              0 |
+| Amazon Route 53                            | HostedZone                       |              4 |              2 |
+| Amazon Route 53                            | MX                               |           1270 |              0 |
+| Amazon Route 53                            | NAPTR                            |              3 |              0 |
+| Amazon Route 53                            | NS                               |           1305 |              0 |
+| Amazon Route 53                            | PTR                              |             10 |              0 |
+| Amazon Route 53                            | SOA                              |            610 |              0 |
+| Amazon Route 53                            | SPF                              |              3 |              0 |
+| Amazon Route 53                            | SRV                              |             73 |              0 |
+| Amazon Route 53                            | SSHFP                            |              1 |              0 |
+| Amazon Route 53                            | SVCB                             |              5 |              0 |
+| Amazon Route 53                            | TLSA                             |              3 |              0 |
+| Amazon Route 53                            | TXT                              |           1394 |              0 |
+| Amazon Route 53                            | UNSUPPORTED                      |             12 |              0 |
+| Amazon Simple Notification Service         | GetDataProtectionPolicy          |              9 |              0 |
+| Amazon Simple Notification Service         | GetTopicAttributes               |              9 |              0 |
+| Amazon Simple Notification Service         | ListSubscriptionsByTopic         |              9 |              0 |
+| Amazon Simple Notification Service         | ListTagsForResource              |              9 |              0 |
+| Amazon Simple Notification Service         | ListTopics                       |              3 |              0 |
+| Amazon Simple Notification Service         | Notification                     |              3 |              0 |
+| Amazon Simple Notification Service         | Publish                          |              1 |              0 |
+| Amazon Simple Queue Service                | DeleteMessageBatch               |            144 |              0 |
+| Amazon Simple Queue Service                | GetQueueAttributes               |          10198 |              0 |
+| Amazon Simple Queue Service                | List                             |              4 |              0 |
+| Amazon Simple Queue Service                | ListQueueTags                    |             12 |              0 |
+| Amazon Simple Queue Service                | Receive                          |         157317 |              0 |
+| Amazon Simple Queue Service                | Send                             |            179 |              0 |
+| Amazon Simple Storage Service              | CopyObject                       |             64 |              0 |
+| Amazon Simple Storage Service              | GeneralPurposeBuckets            |            0.6 |              0 |
+| Amazon Simple Storage Service              | GetObject                        |          28.01 |              0 |
+| Amazon Simple Storage Service              | HeadBucket                       |             45 |              0 |
+| Amazon Simple Storage Service              | HeadObject                       |             27 |              0 |
+| Amazon Simple Storage Service              | IntelligentTieringAIAStorage     |         163.63 |           0.65 |
+| Amazon Simple Storage Service              | IntelligentTieringFAStorage      |           0.02 |              0 |
+| Amazon Simple Storage Service              | IntelligentTieringStorage        |        23271.6 |           0.06 |
+| Amazon Simple Storage Service              | Inventory                        |          78716 |              0 |
+| Amazon Simple Storage Service              | ListAllMyBuckets                 |             16 |              0 |
+| Amazon Simple Storage Service              | ListAllMyDirectoryBuckets        |              4 |              0 |
+| Amazon Simple Storage Service              | ListBucket                       |             91 |              0 |
+| Amazon Simple Storage Service              | ListBucketTags                   |              1 |              0 |
+| Amazon Simple Storage Service              | ListLensConfigurations           |              9 |              0 |
+| Amazon Simple Storage Service              | ListMRAPs                        |              2 |              0 |
+| Amazon Simple Storage Service              | ListStorageLensGroups            |              4 |              0 |
+| Amazon Simple Storage Service              | ObjectTagCount                   |            1.2 |              0 |
+| Amazon Simple Storage Service              | PutObject                        |            163 |              0 |
+| Amazon Simple Storage Service              | ReadAccelerate                   |              1 |              0 |
+| Amazon Simple Storage Service              | ReadBucketAbac                   |              1 |              0 |
+| Amazon Simple Storage Service              | ReadBucketIntelligentTiering     |              1 |              0 |
+| Amazon Simple Storage Service              | ReadBucketOwnershipControls      |              4 |              0 |
+| Amazon Simple Storage Service              | ReadBucketServerSideEncryption   |             87 |              0 |
+| Amazon Simple Storage Service              | ReadBucketWebsite                |              1 |              0 |
+| Amazon Simple Storage Service              | ReadLocation                     |              2 |              0 |
+| Amazon Simple Storage Service              | ReadLogProps                     |             87 |              0 |
+| Amazon Simple Storage Service              | ReadNotificationProps            |              1 |              0 |
+| Amazon Simple Storage Service              | ReadRequestPaymentProps          |              1 |              0 |
+| Amazon Simple Storage Service              | ReadVersioningProps              |              5 |              0 |
+| Amazon Simple Storage Service              | S3.STORAGE_CLASS_ANALYSIS.OBJECT |        23614.8 |              0 |
+| Amazon Simple Storage Service              | StandardStorage                  |           3.45 |           0.08 |
+| Amazon Simple Storage Service              | WebsiteGetObject                 |        32823.5 |           0.01 |
+| Amazon Simple Storage Service              | WebsiteHeadObject                |             54 |              0 |
+| Amazon Virtual Private Cloud               | AllocateAddressVPC               |          436.2 |           2.18 |
+| Amazon Virtual Private Cloud               | AssociateAddressVPC              |        1187.41 |           5.94 |
+| Amazon Virtual Private Cloud               | DescribeNetworkInterfaces        |         263.72 |           1.32 |
+| Amazon Virtual Private Cloud               | RunInstances                     |         418.42 |           2.09 |
+| Amazon Virtual Private Cloud               | VpcEndpoint                      |            873 |           8.73 |
+| Amazon WorkSpaces                          | none                             |              2 |           9.75 |
+| AmazonCloudWatch                           | HourlyStorageMetering            |           1.65 |              0 |
+| AmazonCloudWatch                           | ListMetrics                      |              3 |              0 |
+| AmazonCloudWatch                           | MetricStorage:AWS/ApiGateway     |           0.68 |              0 |
+| AmazonCloudWatch                           | PutLogEvents                     |           0.22 |              0 |
+| AmazonCloudWatch                           | Unknown                          |           7.89 |              0 |
+| Claude Haiku 4.5 (Amazon Bedrock Edition)  | InvokeModelInference             |           0.27 |           0.69 |
+| Claude Sonnet 4.6 (Amazon Bedrock Edition) | InvokeModelInference             |            0.2 |           0.86 |
+| Elastic Load Balancing                     | LoadBalancing                    |           0.16 |              0 |
+| Elastic Load Balancing                     | LoadBalancing:Application        |         242.27 |           5.45 |
++--------------------------------------------+----------------------------------+----------------+----------------+
