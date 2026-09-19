@@ -1,0 +1,5 @@
+# aws-billing-report.py dependencies
+boto3            # s3 access to the exported cost and usage report
+tabulate         # the psql style tables every report is printed with
+termgraph        # imported by graph.py
+pyarrow          # reading CUR 2.0 (Data Exports) parquet files

@@ -7,7 +7,6 @@ import sqlite3
 import datetime
 import sys
 from pathlib import Path
-from decimal import Decimal
 from tabulate import tabulate
 from termgraph import termgraph as tg
 
@@ -18,25 +17,69 @@ PARAM_BUCKET = '--bucket'
 PARAM_VERBOSE = '--verbose'
 PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 
+# THE TWO AWS EXPORT FORMATS THIS TOOL UNDERSTANDS
+# CUR1 IS THE LEGACY COST AND USAGE REPORT (GZIPPED CSV PARTS PLUS A JSON MANIFEST)
+# CUR2 IS THE DATA EXPORTS / CUR 2.0 REPORT (SNAPPY COMPRESSED PARQUET PARTS, NO MANIFEST NEEDED)
+FORMAT_CUR1 = 'cur1'
+FORMAT_CUR2 = 'cur2'
+
+# EVERY FIELD THE REPORT NEEDS, AND WHERE TO FIND IT IN EACH FORMAT
+# dbColumn      : the column name inside the LINE_ITEMS table, which every query below relies on
+# csvColumn     : the header name in a CUR1 csv part
+# parquetColumn : the column name in a CUR2 parquet part. CUR2 keeps the rarely used product
+#                 attributes inside a single 'product' map column instead of one column each,
+#                 so 'product:<key>' means "look <key> up in that map"
+# dataType      : TEXT, NUMBER or DATETIME (a DATETIME is stored as TEXT, like the csv always was)
+FIELDS = [
+    ('identity_LineItemId',         'identity/LineItemId',          'identity_line_item_id',          'TEXT'),
+    ('lineItem_LineItemType',       'lineItem/LineItemType',        'line_item_line_item_type',       'TEXT'),
+    ('lineItem_UsageStartDate',     'lineItem/UsageStartDate',      'line_item_usage_start_date',     'DATETIME'),
+    ('lineItem_UsageEndDate',       'lineItem/UsageEndDate',        'line_item_usage_end_date',       'DATETIME'),
+    ('product_ProductName',         'product/ProductName',          'product:product_name',           'TEXT'),
+    ('lineItem_UsageType',          'lineItem/UsageType',           'line_item_usage_type',           'TEXT'),
+    ('lineItem_Operation',          'lineItem/Operation',           'line_item_operation',            'TEXT'),
+    ('lineItem_UsageAmount',        'lineItem/UsageAmount',         'line_item_usage_amount',         'NUMBER'),
+    ('lineItem_BlendedCost',        'lineItem/BlendedCost',         'line_item_blended_cost',         'NUMBER'),
+    ('lineItem_UnblendedCost',      'lineItem/UnblendedCost',       'line_item_unblended_cost',       'NUMBER'),
+    ('bill_BillingPeriodStartDate', 'bill/BillingPeriodStartDate',  'bill_billing_period_start_date', 'DATETIME'),
+    ('lineItem_UsageAccountId',     'lineItem/UsageAccountId',      'line_item_usage_account_id',     'TEXT'),
+    ('bill_InvoiceId',              'bill/InvoiceId',               'bill_invoice_id',                'TEXT'),
+]
+
+# POSITIONS INSIDE A FIELDS ENTRY
+DB_COLUMN = 0
+CSV_COLUMN = 1
+PARQUET_COLUMN = 2
+DATA_TYPE = 3
+
+# HOW A CUR1 CSV WRITES ITS TIMESTAMPS
+CSV_DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
+# THE CUR2 MAP COLUMN THAT HOLDS THE PRODUCT ATTRIBUTES, AND THE PREFIX THAT POINTS INTO IT
+PRODUCT_MAP_COLUMN = 'product'
+PRODUCT_MAP_PREFIX = 'product:'
+
+# CUR1 TAKES THE ACCOUNT FROM ITS MANIFEST, CUR2 HAS NO MANIFEST SO IT COMES FROM THE PAYER COLUMN
+PARQUET_ACCOUNT_COLUMN = 'bill_payer_account_id'
+
+# USED FOR THE .db FILENAME WHEN THE EXPORT DOES NOT NAME AN ACCOUNT
+UNKNOWN_ACCOUNT = 'billing-report'
+
 # command
 # python aws-billing-report.py --bucket BUCKET --profile PROFILE --billing-report-path BILLING_PATH --verbose 
-# python aws-billing-report.py --bucket billing-report-chipr --profile chiprdev --billing-report-path billing-report/billing-report-chipr/20210301-20210401/20210319T071138Z/ --verbose 
-# python aws-billing-report.py --bucket amarquezelogs --profile pythonAutomation --billing-report-path costreport/AMMCostReport/20260901-20261001/20260916T095140Z/ --verbose > 2026-08.txt
 
 # BILLING_REPORT_BUCKET = 'amarquezelogs'
-# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20260901-20261001/20260916T095140Z/'
+# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20260901-20261001/20260919T105921Z/'
 # PROFILE_NAME='pythonAutomation'
-# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20260901-20261001/20260916T095140Z/ --profile pythonAutomation
+# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20260901-20261001/20260919T105921Z/ --profile pythonAutomation
+# python aws-billing-report.py --bucket amarquezelogs --profile pythonAutomation --billing-report-path costreport/AMMCostReport/20260901-20261001/20260919T105921Z/ --verbose > 2026-09.txt
 
-# BILLING_REPORT_BUCKET = 'backup-chipr-denis'
-# BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210316T115638Z/'
-# PROFILE_NAME='denischipr'
-# aws s3 ls s3://backup-chipr-denis/report/billing_report/20210301-20210401/ --profile denischipr
+# BILLING_REPORT_BUCKET = 'amm-account-admin'
+# BILLING_REPORT_BUCKET_PATH = 'daily/cost-export/data/BILLING_PERIOD=2026-09/'
+# PROFILE_NAME='admin-master'
+# aws s3 ls s3://amm-account-admin/daily/cost-export/data/BILLING_PERIOD=2026-09/ --profile admin-master
+# python aws-billing-report.py --bucket amm-account-admin --profile admin-master --billing-report-path daily/cost-export/data/BILLING_PERIOD=2026-09/ --verbose > 2026-09.txt
 
-# BILLING_REPORT_BUCKET = 'billing-report-chipr'
-# BILLING_REPORT_BUCKET_PATH = 'billing-report/billing-report-chipr/20210301-20210401/20210315T111629Z/'
-# PROFILE_NAME='chiprdev'
-# aws s3 ls s3://billing-report-chipr/billing-report/billing-report-chipr/20210301-20210401/ --profile chiprdev
 
 # OUTPUT EXECUTION INFORMATION WHEN VERBOSE MODE IS ON
 def verbose(verboseMode, message):
@@ -99,28 +142,32 @@ def unzipFile(cachePath, gzFilename):
     return gzFilename[:-3]
 
 # CREATE SQLITE DB
-def createMemoryDatabase(extractColumnList, fileManifest):
+# THE TABLE IS BUILT FROM THE FIELDS TABLE, SO BOTH EXPORT FORMATS LAND IN THE SAME SHAPE
+def createMemoryDatabase():
     memDb = sqlite3.connect(':memory:')
     memDb.row_factory = sqlite3.Row
-    dbCursor = memDb.cursor()
-    sql = 'BEGIN TRANSACTION;'
-    dbCursor.execute(sql)
-    sql = 'CREATE TABLE IF NOT EXISTS LINE_ITEMS (\n'
-    for index, column in enumerate(extractColumnList):
-        dbColumnName = column.replace('/', '_')
-        if (fileManifest['fileColumns'][column] == 'String'):
-           dbColumnDataType = 'TEXT'
-        if (fileManifest['fileColumns'][column] == 'BigDecimal'):
-           dbColumnDataType = 'NUMBER'
-        if (fileManifest['fileColumns'][column] == 'DateTime'):
-           dbColumnDataType = 'TEXT'
-        if ((index+1) == len(extractColumnList)):
-            sql = sql + dbColumnName + ' ' + dbColumnDataType + ' NOT NULL\n'
-        else:
-            sql = sql + dbColumnName + ' ' + dbColumnDataType + ' NOT NULL,\n'
-    sql = sql + ');'
-    dbCursor.execute(sql)
+    columnDefinitions = []
+    for field in FIELDS:
+        dbColumnDataType = 'NUMBER' if (field[DATA_TYPE] == 'NUMBER') else 'TEXT'
+        columnDefinitions.append(field[DB_COLUMN] + ' ' + dbColumnDataType)
+    memDb.execute('CREATE TABLE IF NOT EXISTS LINE_ITEMS (\n' + ',\n'.join(columnDefinitions) + '\n);')
     return memDb
+
+# CONVERT ONE RAW VALUE INTO WHAT SQLITE SHOULD STORE
+# a missing value keeps the convention the csv export always used: an empty string, or zero for
+# a number. CUR2 writes real nulls where the csv wrote empty strings (tax lines have no usage
+# type or operation, for example), so without this the two formats would group differently
+def convertValue(rawValue, dataType, datetimeFormat):
+    if (rawValue is None) or (rawValue == ''):
+        return 0.0 if (dataType == 'NUMBER') else ''
+    if (dataType == 'NUMBER'):
+        return float(rawValue)
+    if (dataType == 'DATETIME'):
+        # the csv hands us a string to parse, parquet hands us a datetime already
+        if (datetimeFormat is not None):
+            rawValue = datetime.datetime.strptime(rawValue, datetimeFormat)
+        return rawValue.strftime('%Y-%m-%d %H:%M:%S')
+    return rawValue
 
 # FLUSH SQLLITE DB IN MEMORY TO DISK
 def flushMemoryDatabaseToDisk(memoryDb, account):
@@ -137,29 +184,14 @@ def flushMemoryDatabaseToDisk(memoryDb, account):
                     print(e)
     fileDB.commit()
 
-# INSERT RECORD ON DATABASE
-def insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fileManifest):
-    sql = 'INSERT INTO LINE_ITEMS (\n'
-    for index, column in enumerate(extractColumnList):
-        if ((index+1) == len(extractColumnList)):
-            sql = sql + column.replace('/','_') + ') VALUES (\n'
-        else:
-            sql = sql + column.replace('/','_') + ',\n' 
-    for index, columnValue in enumerate(columnValues):
-        if (fileManifest['fileColumns'][extractColumnList[index]] == 'String'):
-            convertedValue = '"' + columnValue + '"' 
-        if (fileManifest['fileColumns'][extractColumnList[index]] == 'DateTime'):
-            #print(columnValue, columnValue.strftime('%Y-%m-%d'), columnValue.strftime('%Y-%m-%d %H:%M:%S'))
-            convertedValue = '"' + columnValue.strftime('%Y-%m-%d %H:%M:%S') + '"' 
-        if (fileManifest['fileColumns'][extractColumnList[index]] == 'BigDecimal'):
-            convertedValue = str(columnValue)
-        if ((index+1) == len(columnValues)):
-            sql = sql + convertedValue + ');\n'
-        else:
-            sql = sql + convertedValue + ',\n' 
-    dbCursor = memoryDB.cursor()
-    dbCursor.execute(sql)
-    dbCursor.execute('COMMIT;')
+# INSERT ALL LINE ITEMS ON DATABASE IN ONE GO
+# the values are bound as parameters rather than pasted into the sql text, so a product name
+# containing a quote cannot break the statement, and 20k rows load in one round trip
+def insertRows(memoryDB, rows):
+    sql = 'INSERT INTO LINE_ITEMS (' + ', '.join([field[DB_COLUMN] for field in FIELDS]) + ') ' \
+        + 'VALUES (' + ', '.join(['?'] * len(FIELDS)) + ')'
+    memoryDB.executemany(sql, rows)
+    memoryDB.commit()
 
 # QUERY DATABASE
 def queryDatabase(memoryDB, title, query):
@@ -226,60 +258,78 @@ def pivotDailyCostPerService(memoryDB, title, query):
 
     print(tabulate(tableRows, columnHeader, tablefmt='psql', floatfmt='.2f', missingval='', numalign='right', stralign='left'))
 
-# FETCH CSV FILE STRUCTURE FROM JSON MANIFEST
-def fetchManifest(cachePath, filename):
-    jsonManifestFile = open(cachePath + filename)
-    jsonManifest = json.loads(jsonManifestFile.read())
-    jsonManifestFile.close()
+# FETCH THE ACCOUNT THE REPORT BELONGS TO FROM THE JSON MANIFEST OF A CUR1 EXPORT
+# the manifest also describes the csv column types, but the FIELDS table above now does that
+# for both formats, so the manifest is only consulted for the account
+def fetchManifestAccount(cachePath, filename):
+    with open(cachePath + filename) as jsonManifestFile:
+        jsonManifest = json.loads(jsonManifestFile.read())
+    return jsonManifest.get('account', '')
 
-    manifest = {}
-    manifest['account'] = jsonManifest['account']
-    fileStructure = {}
-    for column in jsonManifest['columns']:
-        columnName = column['category'] + '/' + column['name']
-        columnDataType = column['type']
-        fileStructure[columnName] = columnDataType
-    manifest['fileColumns'] = fileStructure
-    return manifest
+# READ THE CSV PARTS OF A CUR1 EXPORT INTO ROWS THAT MATCH THE FIELDS TABLE
+def loadCsvReport(cachePath, downloadedFiles, verboseMode):
+    account = fetchManifestAccount(cachePath, downloadedFiles['manifestFile'])
+    rows = []
+    # aws splits a big report in several csv parts, all of them belong to the same report
+    for index, csvFilename in enumerate(downloadedFiles['dataFiles']):
+        verbose(verboseMode, 'Importing CSV file {0} of {1} ({2}) ...'.format(index+1, len(downloadedFiles['dataFiles']), csvFilename))
+        with open(cachePath + csvFilename, newline='') as csvFile:
+            # the report quotes any field containing a comma, so let the csv module split the records
+            csvReader = csv.reader(csvFile)
+            # read header line with the column names and find each field we care about once
+            columnHeader = next(csvReader)
+            columnIndexes = [columnHeader.index(field[CSV_COLUMN]) for field in FIELDS]
+            for record in csvReader:
+                rows.append(tuple(
+                    convertValue(record[columnIndexes[fieldIndex]], field[DATA_TYPE], CSV_DATETIME_FORMAT)
+                    for fieldIndex, field in enumerate(FIELDS)))
+    return account, rows
 
-# IMPORT CSV FILE INTO MEMORY DATABASE
-def importCsvToDatabase(cachePath, csvFilename, memoryDB, extractColumnList, fileManifest):
+# READ THE PARQUET PARTS OF A CUR2 EXPORT INTO ROWS THAT MATCH THE FIELDS TABLE
+def loadParquetReport(cachePath, downloadedFiles, verboseMode):
+    # pyarrow is only needed for the new format, so the csv path keeps working without it
+    try:
+        import pyarrow.parquet as parquet
+    except ImportError:
+        print('error: reading a CUR 2.0 (parquet) export needs pyarrow. Install it with: pip install pyarrow')
+        return '', []
 
-    with open(cachePath + csvFilename, newline='') as f:
-        #print(extractColumnList)
+    # split the fields into plain columns and lookups inside the 'product' map column
+    productKeys = {}
+    plainColumns = []
+    for fieldIndex, field in enumerate(FIELDS):
+        if field[PARQUET_COLUMN].startswith(PRODUCT_MAP_PREFIX):
+            productKeys[fieldIndex] = field[PARQUET_COLUMN][len(PRODUCT_MAP_PREFIX):]
+        else:
+            plainColumns.append(field[PARQUET_COLUMN])
+    readColumns = plainColumns + [PARQUET_ACCOUNT_COLUMN]
+    if (len(productKeys) > 0):
+        readColumns.append(PRODUCT_MAP_COLUMN)
+    readColumns = sorted(set(readColumns))
 
-        # the report quotes any field containing a comma, so let the csv module split the records
-        csvReader = csv.reader(f)
-        # read header line with the column names
-        columnHeader = next(csvReader)
-        # print the index of each extract column
-        columnIndexes = []
-        for field in extractColumnList:
-            columnIndex = columnHeader.index(field)
-            columnIndexes.append(columnIndex)
-        #print(columnIndexes)
-        # print the datatype of each extract column
-        columnDatatypes = []
-        for field in extractColumnList:
-            columnDatatype = fileManifest['fileColumns'][field]
-            columnDatatypes.append(columnDatatype)
-        #print(columnDatatypes)
-        # iterate over file and get each field value
-        for record in csvReader:
-            columnValues = []
-            for field in extractColumnList:
-                columnIndex = columnHeader.index(field)
-                columnValue = record[columnIndex]
-                if (fileManifest['fileColumns'][field] == 'String'):
-                    columnValues.append(record[columnIndex])
-                if (fileManifest['fileColumns'][field] == 'BigDecimal'):
-                    columnValues.append(Decimal(record[columnIndex]))
-                if (fileManifest['fileColumns'][field] == 'DateTime'):
-                    #columnValues.append(record[columnIndex])
-                    columnValues.append(datetime.datetime.strptime(record[columnIndex],'%Y-%m-%dT%H:%M:%SZ'))
-            # if (columnValues[0] == 'Usage'):
-                #print(columnValues)
-            insertRecord(memoryDB, extractColumnList, columnValues, columnDatatypes, fileManifest)
+    account = ''
+    rows = []
+    # aws splits a big report in several parquet parts, all of them belong to the same report
+    for index, parquetFilename in enumerate(downloadedFiles['dataFiles']):
+        verbose(verboseMode, 'Importing parquet file {0} of {1} ({2}) ...'.format(index+1, len(downloadedFiles['dataFiles']), parquetFilename))
+        # parquet is columnar, so asking for 14 of its 120+ columns only reads those off disk
+        table = parquet.read_table(cachePath + parquetFilename, columns=readColumns)
+        columnValues = {column: table.column(column).to_pylist() for column in readColumns}
+        productMaps = []
+        if (len(productKeys) > 0):
+            productMaps = [dict(entry) if entry else {} for entry in columnValues[PRODUCT_MAP_COLUMN]]
+        for rowIndex in range(table.num_rows):
+            if (account == '') and columnValues[PARQUET_ACCOUNT_COLUMN][rowIndex]:
+                account = columnValues[PARQUET_ACCOUNT_COLUMN][rowIndex]
+            row = []
+            for fieldIndex, field in enumerate(FIELDS):
+                if (fieldIndex in productKeys):
+                    rawValue = productMaps[rowIndex].get(productKeys[fieldIndex])
+                else:
+                    rawValue = columnValues[field[PARQUET_COLUMN]][rowIndex]
+                row.append(convertValue(rawValue, field[DATA_TYPE], None))
+            rows.append(tuple(row))
+    return account, rows
 
 # CREATE SUBDIRECTORIES UNDER CACHE
 def makeCacheFolders(filenameWithPath):
@@ -293,89 +343,126 @@ def makeCacheFolders(filenameWithPath):
 
 
 # LIST CONTENT OF DIRECTORY AND DOWNLOAD
-def downloadFilesFromBucket(bucket_name, bucket_path):
+def downloadFilesFromBucket(s3, bucket_name, bucket_path, verboseMode):
     # check if cache exists and create it
     if (not os.path.exists(CACHE_PATH)):
         os.mkdir(CACHE_PATH)
-    listResult = s3.list_objects(Bucket=bucket_name,Prefix=bucket_path)
-    if ('Contents' in listResult):
-        bucketContents = listResult['Contents']
-    else:
-        bucketContents = []
-    downloadFiles = {'csvFiles': [], 'manifestFile': ''}
-    for item in bucketContents:
-        filenameWithPath = item['Key']
+
+    # a big export is split in many parts, so page through the whole prefix instead of
+    # taking only the first thousand keys a single list call would return
+    bucketKeys = []
+    for page in s3.get_paginator('list_objects_v2').paginate(Bucket=bucket_name, Prefix=bucket_path):
+        for item in page.get('Contents', []):
+            bucketKeys.append(item['Key'])
+
+    # the format is decided by what aws actually delivered, so no extra command line switch
+    # is needed: parquet parts mean a CUR2 export, anything else is treated as the old CUR1
+    downloadFiles = {'format': FORMAT_CUR1, 'dataFiles': [], 'manifestFile': ''}
+    if any(key.endswith('.parquet') for key in bucketKeys):
+        downloadFiles['format'] = FORMAT_CUR2
+
+    for filenameWithPath in bucketKeys:
         filename = Path(filenameWithPath).name
+        isParquet = filename.endswith('.parquet')
+        isGzip = filename.endswith('.gz')
+        isManifest = filename.endswith('.json')
+        # each format ships its own companion files, only fetch the ones this format needs.
+        # a CUR2 export also writes json metadata next to the data, which we have no use for
+        if (downloadFiles['format'] == FORMAT_CUR2) and (not isParquet):
+            continue
+        if (downloadFiles['format'] == FORMAT_CUR1) and (not isGzip) and (not isManifest):
+            continue
         makeCacheFolders(filenameWithPath)
         if (not os.path.exists(CACHE_PATH + filenameWithPath)):
-            verbose(commandLineResult['--verbose'], 'Downloading file {0}{1} from S3 bucket in AWS'.format(CACHE_PATH, filenameWithPath))
+            verbose(verboseMode, 'Downloading file {0}{1} from S3 bucket in AWS'.format(CACHE_PATH, filenameWithPath))
             s3.download_file(bucket_name, filenameWithPath, CACHE_PATH + filenameWithPath)
         else:
-            verbose(commandLineResult['--verbose'], 'Skipping download of file {0}{1}. File already in local cache.'.format(CACHE_PATH, filenameWithPath))
-        if (filename[-3:] == '.gz'):
-            downloadFiles['csvFiles'].append(unzipFile(CACHE_PATH, filenameWithPath))
-        if (filename[-5:] == '.json'):
+            verbose(verboseMode, 'Skipping download of file {0}{1}. File already in local cache.'.format(CACHE_PATH, filenameWithPath))
+        if isParquet:
+            # parquet compresses itself internally, there is nothing to unzip
+            downloadFiles['dataFiles'].append(filenameWithPath)
+        if isGzip:
+            downloadFiles['dataFiles'].append(unzipFile(CACHE_PATH, filenameWithPath))
+        if isManifest:
             downloadFiles['manifestFile'] = filenameWithPath
 
-    # keep the csv parts in the order aws numbered them
-    downloadFiles['csvFiles'].sort()
+    # keep the parts in the order aws numbered them
+    downloadFiles['dataFiles'].sort()
     return downloadFiles
 
+# RUN EVERY REPORT AGAINST THE LOADED LINE ITEMS
+# these are the same for both export formats, because both land in the same LINE_ITEMS table
+def runReports(memoryDb):
+    queryDatabase(memoryDb, 'REPORT PERIOD', 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)) as USAGE_START, max(strftime(\'%Y-%m-%d\', lineItem_UsageEndDate)) as USAGE_END, round(sum(lineItem_UnblendedCost),2) as TOTAL \
+        FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId')
+    queryDatabase(memoryDb, 'HIGH LEVEL USAGE & COST BY TYPE', 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+        FROM LINE_ITEMS GROUP BY lineItem_LineItemType', )
+    queryDatabase(memoryDb, 'SERVICES COSTS (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+        FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName')
+    queryDatabase(memoryDb, 'RESERVED INSTANCE COSTS', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+        FROM line_items WHERE lineItem_LineItemType = "RIFee" GROUP BY lineItem_UsageType')
+    queryDatabase(memoryDb, 'RESERVED INSTANCE - OPERATIONS', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+        FROM line_items WHERE lineItem_LineItemType = "RIFee" GROUP BY lineItem_Operation')
+    queryDatabase(memoryDb, 'USAGE AND COST (without Tax)', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+        FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0')
+    queryDatabase(memoryDb, 'USAGE AND COSTS OPERATIONS (without Tax)', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+        FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_Operation')
+    queryDatabase(memoryDb, 'DAILY COSTS PER SERVICE (without Tax)', 'select product_ProductName AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, round(sum(lineItem_UnblendedCost),2) as TOTAL \
+        FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY strftime(\'%Y-%m-%d\', lineItem_UsageStartDate), product_ProductName HAVING round(sum(lineItem_UnblendedCost),2) > 0 ORDER BY product_ProductName, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
+    pivotDailyCostPerService(memoryDb, 'DAILY COSTS PER SERVICE - PIVOT (without Tax)', 'SELECT product_ProductName AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, sum(lineItem_UnblendedCost) as TOTAL \
+        FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
+    queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND USAGE TYPE (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+        FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName,lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0', )
+    queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND OPERATION (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+        FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName,lineItem_Operation HAVING round(SUM(lineItem_UsageAmount),2) > 0')
+
 # MAIN FLOW
-commandLineResult = commandLineVerification()
-if (commandLineResult['status']):
-    verbose(commandLineResult['--verbose'], 'Starting execution ...')
+def main():
+    commandLineResult = commandLineVerification()
+    if (not commandLineResult['status']):
+        return
+    verboseMode = commandLineResult[PARAM_VERBOSE]
+    verbose(verboseMode, 'Starting execution ...')
 
     # INITIALIZE BOTO3
-    # choose profile to be used 
+    # choose profile to be used
     boto3.setup_default_session(profile_name=commandLineResult[PARAM_PROFILE])
-
-    # GLOBAL VARIABLES
-    extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'product/ProductName', \
-        'lineItem/UsageType', 'lineItem/Operation', 'lineItem/UsageAmount', 'lineItem/BlendedCost', 'lineItem/UnblendedCost', 'bill/BillingPeriodStartDate', 'lineItem/UsageAccountId', 'bill/InvoiceId']
-
     s3 = boto3.client('s3')
-    verbose(commandLineResult['--verbose'], 'Downloading files from S3 bucket ...')
-    downloadedFiles = downloadFilesFromBucket(commandLineResult[PARAM_BUCKET], commandLineResult[PARAM_BILLING_REPORT_PATH])
 
-    if (downloadedFiles['manifestFile'] != '') and (len(downloadedFiles['csvFiles']) > 0):
-        verbose(commandLineResult['--verbose'], 'Reading manifest from S3 bucket ...')
-        fileManifest = fetchManifest(CACHE_PATH,downloadedFiles['manifestFile'])
+    verbose(verboseMode, 'Downloading files from S3 bucket ...')
+    downloadedFiles = downloadFilesFromBucket(s3, commandLineResult[PARAM_BUCKET], commandLineResult[PARAM_BILLING_REPORT_PATH], verboseMode)
 
-        verbose(commandLineResult['--verbose'], 'Creating in memory database ...')
-        memoryDb = createMemoryDatabase(extractColumnList, fileManifest)
+    if (len(downloadedFiles['dataFiles']) == 0):
+        verbose(verboseMode, 'No files in the provided bucket and billing report path ...')
+        return
+    if (downloadedFiles['format'] == FORMAT_CUR1) and (downloadedFiles['manifestFile'] == ''):
+        verbose(verboseMode, 'No manifest file next to the CSV parts in the provided billing report path ...')
+        return
 
-        # aws splits a big report in several csv parts, all of them belong to the same report
-        for index, csvFilename in enumerate(downloadedFiles['csvFiles']):
-            verbose(commandLineResult['--verbose'], 'Importing CSV file {0} of {1} ({2}) ...'.format(index+1, len(downloadedFiles['csvFiles']), csvFilename))
-            importCsvToDatabase(CACHE_PATH,csvFilename, memoryDb, extractColumnList, fileManifest)
-        verbose(commandLineResult['--verbose'], 'Executing queries and output results ...')
-
-        queryDatabase(memoryDb, 'REPORT PERIOD', 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)) as USAGE_START, max(strftime(\'%Y-%m-%d\', lineItem_UsageEndDate)) as USAGE_END, round(sum(lineItem_UnblendedCost),2) as TOTAL \
-            FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId')
-        queryDatabase(memoryDb, 'HIGH LEVEL USAGE & COST BY TYPE', 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM LINE_ITEMS GROUP BY lineItem_LineItemType', )
-        queryDatabase(memoryDb, 'SERVICES COSTS (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName')
-        queryDatabase(memoryDb, 'RESERVED INSTANCE COSTS', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType = "RIFee" GROUP BY lineItem_UsageType')
-        queryDatabase(memoryDb, 'RESERVED INSTANCE - OPERATIONS', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType = "RIFee" GROUP BY lineItem_Operation')
-        queryDatabase(memoryDb, 'USAGE AND COST (without Tax)', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0')
-        queryDatabase(memoryDb, 'USAGE AND COSTS OPERATIONS (without Tax)', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_Operation')
-        queryDatabase(memoryDb, 'DAILY COSTS PER SERVICE (without Tax)', 'select product_ProductName AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, round(sum(lineItem_UnblendedCost),2) as TOTAL \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY strftime(\'%Y-%m-%d\', lineItem_UsageStartDate), product_ProductName HAVING round(sum(lineItem_UnblendedCost),2) > 0 ORDER BY product_ProductName, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
-        pivotDailyCostPerService(memoryDb, 'DAILY COSTS PER SERVICE - PIVOT (without Tax)', 'SELECT product_ProductName AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, sum(lineItem_UnblendedCost) as TOTAL \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
-        queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND USAGE TYPE (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName,lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0', )
-        queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND OPERATION (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName,lineItem_Operation HAVING round(SUM(lineItem_UsageAmount),2) > 0')
-        verbose(commandLineResult['--verbose'], 'Flushing in memory database to sqlite.db ({0})  ...'.format(fileManifest['account']))
-        flushMemoryDatabaseToDisk(memoryDb, fileManifest['account'])
-
+    if (downloadedFiles['format'] == FORMAT_CUR2):
+        verbose(verboseMode, 'Detected a CUR 2.0 (parquet) export ...')
+        account, rows = loadParquetReport(CACHE_PATH, downloadedFiles, verboseMode)
     else:
-        verbose(commandLineResult['--verbose'], 'No files in the provided bucket and billing report path ...')
+        verbose(verboseMode, 'Detected a CUR v1 (csv) export ...')
+        account, rows = loadCsvReport(CACHE_PATH, downloadedFiles, verboseMode)
+
+    if (len(rows) == 0):
+        verbose(verboseMode, 'No line items found in the downloaded files ...')
+        return
+
+    verbose(verboseMode, 'Creating in memory database ...')
+    memoryDb = createMemoryDatabase()
+    verbose(verboseMode, 'Inserting {0} line items into the in memory database ...'.format(len(rows)))
+    insertRows(memoryDb, rows)
+
+    verbose(verboseMode, 'Executing queries and output results ...')
+    runReports(memoryDb)
+
+    if (account == ''):
+        account = UNKNOWN_ACCOUNT
+    verbose(verboseMode, 'Flushing in memory database to sqlite.db ({0})  ...'.format(account))
+    flushMemoryDatabaseToDisk(memoryDb, account)
+
+if (__name__ == '__main__'):
+    main()
 
