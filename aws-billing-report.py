@@ -21,12 +21,12 @@ PARAM_BILLING_REPORT_PATH = '--billing-report-path'
 # command
 # python aws-billing-report.py --bucket BUCKET --profile PROFILE --billing-report-path BILLING_PATH --verbose 
 # python aws-billing-report.py --bucket billing-report-chipr --profile chiprdev --billing-report-path billing-report/billing-report-chipr/20210301-20210401/20210319T071138Z/ --verbose 
-# python aws-billing-report.py --bucket amarquezelogs --profile pythonAutomation --billing-report-path costreport/AMMCostReport/20260801-20260901/20260831T201708Z/ --verbose > 2026-08.txt
+# python aws-billing-report.py --bucket amarquezelogs --profile pythonAutomation --billing-report-path costreport/AMMCostReport/20260901-20261001/20260916T095140Z/ --verbose > 2026-08.txt
 
 # BILLING_REPORT_BUCKET = 'amarquezelogs'
-# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20260701-20260801/20260701T140549Z/'
+# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20260901-20261001/20260916T095140Z/'
 # PROFILE_NAME='pythonAutomation'
-# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20210301-20210401/ --profile pythonAutomation
+# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20260901-20261001/20260916T095140Z/ --profile pythonAutomation
 
 # BILLING_REPORT_BUCKET = 'backup-chipr-denis'
 # BILLING_REPORT_BUCKET_PATH = 'report/billing_report/20210301-20210401/20210316T115638Z/'
@@ -174,6 +174,58 @@ def queryDatabase(memoryDB, title, query):
         print('No data not available for this query')
 
 
+# QUERY DATABASE AND OUTPUT A PIVOT TABLE WITH ONE ROW PER PRODUCT CODE AND ONE COLUMN PER DAY
+def pivotDailyCostPerService(memoryDB, title, query):
+    dbCursor = memoryDB.cursor()
+    dbCursor.execute(query)
+    result = dbCursor.fetchall()
+    print('\n' + title)
+    print("=" * len(title))
+    if (len(result) == 0):
+        print('No data not available for this query')
+        return
+
+    # PIVOT THE LINES INTO A COST PER PRODUCT CODE PER DAY MATRIX
+    costMatrix = {}
+    reportDays = set()
+    for record in result:
+        productCode = record['PRODUCT_CODE']
+        reportDay = record['DATE']
+        reportDays.add(reportDay)
+        if (productCode not in costMatrix):
+            costMatrix[productCode] = {}
+        costMatrix[productCode][reportDay] = costMatrix[productCode].get(reportDay, 0) + record['TOTAL']
+    reportDays = sorted(reportDays)
+
+    # SKIP THE PRODUCT CODES WITHOUT COST IN THE WHOLE PERIOD (FREE TIER USAGE) AND PUT THE BIGGEST SPENDERS FIRST
+    productTotals = {}
+    for productCode in costMatrix:
+        productTotals[productCode] = sum(costMatrix[productCode].values())
+    productCodes = [productCode for productCode in costMatrix if round(productTotals[productCode],2) != 0]
+    productCodes.sort(key=lambda productCode: productTotals[productCode], reverse=True)
+    if (len(productCodes) == 0):
+        print('No data not available for this query')
+        return
+
+    # ONE COLUMN PER DAY OF THE MONTH, PLUS THE PRODUCT CODE AND THE SUMMARY OF EACH SERVICE
+    columnHeader = ['PRODUCT_CODE'] + [reportDay[-2:] for reportDay in reportDays] + ['TOTAL']
+    tableRows = []
+    for productCode in productCodes:
+        tableRow = [productCode]
+        for reportDay in reportDays:
+            tableRow.append(costMatrix[productCode].get(reportDay, None))
+        tableRow.append(productTotals[productCode])
+        tableRows.append(tableRow)
+
+    # SUMMARY OF EACH DAY ON THE LAST ROW
+    totalRow = ['TOTAL']
+    for reportDay in reportDays:
+        totalRow.append(sum([costMatrix[productCode].get(reportDay, 0) for productCode in productCodes], 0.0))
+    totalRow.append(sum([productTotals[productCode] for productCode in productCodes], 0.0))
+    tableRows.append(totalRow)
+
+    print(tabulate(tableRows, columnHeader, tablefmt='psql', floatfmt='.2f', missingval='', numalign='right', stralign='left'))
+
 # FETCH CSV FILE STRUCTURE FROM JSON MANIFEST
 def fetchManifest(cachePath, filename):
     jsonManifestFile = open(cachePath + filename)
@@ -250,7 +302,7 @@ def downloadFilesFromBucket(bucket_name, bucket_path):
         bucketContents = listResult['Contents']
     else:
         bucketContents = []
-    downloadFiles = []
+    downloadFiles = {'csvFiles': [], 'manifestFile': ''}
     for item in bucketContents:
         filenameWithPath = item['Key']
         filename = Path(filenameWithPath).name
@@ -261,10 +313,12 @@ def downloadFilesFromBucket(bucket_name, bucket_path):
         else:
             verbose(commandLineResult['--verbose'], 'Skipping download of file {0}{1}. File already in local cache.'.format(CACHE_PATH, filenameWithPath))
         if (filename[-3:] == '.gz'):
-            downloadFiles.append(unzipFile(CACHE_PATH, filenameWithPath))
+            downloadFiles['csvFiles'].append(unzipFile(CACHE_PATH, filenameWithPath))
         if (filename[-5:] == '.json'):
-            downloadFiles.append(filenameWithPath)
+            downloadFiles['manifestFile'] = filenameWithPath
 
+    # keep the csv parts in the order aws numbered them
+    downloadFiles['csvFiles'].sort()
     return downloadFiles
 
 # MAIN FLOW
@@ -277,30 +331,32 @@ if (commandLineResult['status']):
     boto3.setup_default_session(profile_name=commandLineResult[PARAM_PROFILE])
 
     # GLOBAL VARIABLES
-    extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'lineItem/ProductCode', \
+    extractColumnList = ['identity/LineItemId', 'lineItem/LineItemType', 'lineItem/UsageStartDate', 'lineItem/UsageEndDate', 'product/ProductName', \
         'lineItem/UsageType', 'lineItem/Operation', 'lineItem/UsageAmount', 'lineItem/BlendedCost', 'lineItem/UnblendedCost', 'bill/BillingPeriodStartDate', 'lineItem/UsageAccountId', 'bill/InvoiceId']
 
     s3 = boto3.client('s3')
     verbose(commandLineResult['--verbose'], 'Downloading files from S3 bucket ...')
     downloadedFiles = downloadFilesFromBucket(commandLineResult[PARAM_BUCKET], commandLineResult[PARAM_BILLING_REPORT_PATH])
 
-    if (len(downloadedFiles) > 0):
+    if (downloadedFiles['manifestFile'] != '') and (len(downloadedFiles['csvFiles']) > 0):
         verbose(commandLineResult['--verbose'], 'Reading manifest from S3 bucket ...')
-        fileManifest = fetchManifest(CACHE_PATH,downloadedFiles[1])
+        fileManifest = fetchManifest(CACHE_PATH,downloadedFiles['manifestFile'])
 
         verbose(commandLineResult['--verbose'], 'Creating in memory database ...')
         memoryDb = createMemoryDatabase(extractColumnList, fileManifest)
 
-        verbose(commandLineResult['--verbose'], 'Importing CSV files ...')
-        importCsvToDatabase(CACHE_PATH,downloadedFiles[0], memoryDb, extractColumnList, fileManifest)
+        # aws splits a big report in several csv parts, all of them belong to the same report
+        for index, csvFilename in enumerate(downloadedFiles['csvFiles']):
+            verbose(commandLineResult['--verbose'], 'Importing CSV file {0} of {1} ({2}) ...'.format(index+1, len(downloadedFiles['csvFiles']), csvFilename))
+            importCsvToDatabase(CACHE_PATH,csvFilename, memoryDb, extractColumnList, fileManifest)
         verbose(commandLineResult['--verbose'], 'Executing queries and output results ...')
 
         queryDatabase(memoryDb, 'REPORT PERIOD', 'SELECT lineItem_UsageAccountId as ACCOUNT_ID, bill_InvoiceId as INVOICE_ID, min(strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)) as USAGE_START, max(strftime(\'%Y-%m-%d\', lineItem_UsageEndDate)) as USAGE_END, round(sum(lineItem_UnblendedCost),2) as TOTAL \
             FROM LINE_ITEMS group by lineItem_UsageAccountId, bill_InvoiceId')
         queryDatabase(memoryDb, 'HIGH LEVEL USAGE & COST BY TYPE', 'SELECT lineItem_LineItemType ITEM_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
             FROM LINE_ITEMS GROUP BY lineItem_LineItemType', )
-        queryDatabase(memoryDb, 'SERVICES COSTS (without Tax)', 'SELECT lineItem_ProductCode as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_ProductCode')
+        queryDatabase(memoryDb, 'SERVICES COSTS (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName')
         queryDatabase(memoryDb, 'RESERVED INSTANCE COSTS', 'SELECT lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
             FROM line_items WHERE lineItem_LineItemType = "RIFee" GROUP BY lineItem_UsageType')
         queryDatabase(memoryDb, 'RESERVED INSTANCE - OPERATIONS', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
@@ -309,12 +365,14 @@ if (commandLineResult['status']):
             FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0')
         queryDatabase(memoryDb, 'USAGE AND COSTS OPERATIONS (without Tax)', 'SELECT lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
             FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_Operation')
-        queryDatabase(memoryDb, 'DAILY COSTS PER SERVICE (without Tax)', 'select lineItem_ProductCode AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, round(sum(lineItem_UnblendedCost),2) as TOTAL \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY strftime(\'%Y-%m-%d\', lineItem_UsageStartDate), lineItem_ProductCode HAVING round(sum(lineItem_UnblendedCost),2) > 0 ORDER BY lineItem_ProductCode, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
-        queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND USAGE TYPE (without Tax)', 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_ProductCode,lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0', )
-        queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND OPERATION (without Tax)', 'SELECT lineItem_ProductCode as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
-            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY lineItem_ProductCode,lineItem_Operation HAVING round(SUM(lineItem_UsageAmount),2) > 0')
+        queryDatabase(memoryDb, 'DAILY COSTS PER SERVICE (without Tax)', 'select product_ProductName AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, round(sum(lineItem_UnblendedCost),2) as TOTAL \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY strftime(\'%Y-%m-%d\', lineItem_UsageStartDate), product_ProductName HAVING round(sum(lineItem_UnblendedCost),2) > 0 ORDER BY product_ProductName, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
+        pivotDailyCostPerService(memoryDb, 'DAILY COSTS PER SERVICE - PIVOT (without Tax)', 'SELECT product_ProductName AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, sum(lineItem_UnblendedCost) as TOTAL \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
+        queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND USAGE TYPE (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName,lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0', )
+        queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND OPERATION (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
+            FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName,lineItem_Operation HAVING round(SUM(lineItem_UsageAmount),2) > 0')
         verbose(commandLineResult['--verbose'], 'Flushing in memory database to sqlite.db ({0})  ...'.format(fileManifest['account']))
         flushMemoryDatabaseToDisk(memoryDb, fileManifest['account'])
 
