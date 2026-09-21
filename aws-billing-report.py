@@ -69,16 +69,16 @@ UNKNOWN_ACCOUNT = 'billing-report'
 # python aws-billing-report.py --bucket BUCKET --profile PROFILE --billing-report-path BILLING_PATH --verbose 
 
 # BILLING_REPORT_BUCKET = 'amarquezelogs'
-# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20260901-20261001/20260919T105921Z/'
+# BILLING_REPORT_BUCKET_PATH = 'costreport/AMMCostReport/20260901-20261001/20260920T042132Z/'
 # PROFILE_NAME='pythonAutomation'
-# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20260901-20261001/20260919T105921Z/ --profile pythonAutomation
-# python aws-billing-report.py --bucket amarquezelogs --profile pythonAutomation --billing-report-path costreport/AMMCostReport/20260901-20261001/20260919T105921Z/ --verbose > 2026-09.txt
+# aws s3 ls s3://amarquezelogs/costreport/AMMCostReport/20260901-20261001/20260920T042132Z/ --profile pythonAutomation
+# python aws-billing-report.py --bucket amarquezelogs --profile pythonAutomation --billing-report-path costreport/AMMCostReport/20260901-20261001/20260920T042132Z/ --verbose > 2026-09.txt
 
 # BILLING_REPORT_BUCKET = 'amm-account-admin'
 # BILLING_REPORT_BUCKET_PATH = 'daily/cost-export/data/BILLING_PERIOD=2026-09/'
 # PROFILE_NAME='admin-master'
-# aws s3 ls s3://amm-account-admin/daily/cost-export/data/BILLING_PERIOD=2026-09/ --profile admin-master
-# python aws-billing-report.py --bucket amm-account-admin --profile admin-master --billing-report-path daily/cost-export/data/BILLING_PERIOD=2026-09/ --verbose > 2026-09.txt
+# aws s3 ls s3://amm-account-admin/daily/cost-export/data/BILLING_PERIOD=2026-06/ --profile admin-master
+# python aws-billing-report.py --bucket amm-account-admin --profile admin-master --billing-report-path daily/cost-export/data/BILLING_PERIOD=2026-06/ --verbose > 2026-09-b.txt
 
 
 # OUTPUT EXECUTION INFORMATION WHEN VERBOSE MODE IS ON
@@ -206,8 +206,10 @@ def queryDatabase(memoryDB, title, query):
         print('No data not available for this query')
 
 
-# QUERY DATABASE AND OUTPUT A PIVOT TABLE WITH ONE ROW PER PRODUCT CODE AND ONE COLUMN PER DAY
-def pivotDailyCostPerService(memoryDB, title, query):
+# QUERY DATABASE AND OUTPUT A PIVOT TABLE WITH ONE ROW PER LABEL (PRODUCT CODE BY DEFAULT) AND ONE COLUMN PER DAY
+# the label can be made of several columns, e.g. product code and usage type, each printed in its own column
+# rows go biggest spender first, or in label order when sortByLabel is set, so the rows of the same product stay together
+def pivotDailyCostPerService(memoryDB, title, query, labelColumns=['PRODUCT_CODE'], sortByLabel=False):
     dbCursor = memoryDB.cursor()
     dbCursor.execute(query)
     result = dbCursor.fetchall()
@@ -221,7 +223,7 @@ def pivotDailyCostPerService(memoryDB, title, query):
     costMatrix = {}
     reportDays = set()
     for record in result:
-        productCode = record['PRODUCT_CODE']
+        productCode = tuple(record[labelColumn] for labelColumn in labelColumns)
         reportDay = record['DATE']
         reportDays.add(reportDay)
         if (productCode not in costMatrix):
@@ -234,23 +236,27 @@ def pivotDailyCostPerService(memoryDB, title, query):
     for productCode in costMatrix:
         productTotals[productCode] = sum(costMatrix[productCode].values())
     productCodes = [productCode for productCode in costMatrix if round(productTotals[productCode],2) != 0]
-    productCodes.sort(key=lambda productCode: productTotals[productCode], reverse=True)
+    if (sortByLabel):
+        # a missing product name or usage type comes as None, which python cannot compare with text
+        productCodes.sort(key=lambda productCode: tuple(label or '' for label in productCode))
+    else:
+        productCodes.sort(key=lambda productCode: productTotals[productCode], reverse=True)
     if (len(productCodes) == 0):
         print('No data not available for this query')
         return
 
     # ONE COLUMN PER DAY OF THE MONTH, PLUS THE PRODUCT CODE AND THE SUMMARY OF EACH SERVICE
-    columnHeader = ['PRODUCT_CODE'] + [reportDay[-2:] for reportDay in reportDays] + ['TOTAL']
+    columnHeader = labelColumns + [reportDay[-2:] for reportDay in reportDays] + ['TOTAL']
     tableRows = []
     for productCode in productCodes:
-        tableRow = [productCode]
+        tableRow = list(productCode)
         for reportDay in reportDays:
             tableRow.append(costMatrix[productCode].get(reportDay, None))
         tableRow.append(productTotals[productCode])
         tableRows.append(tableRow)
 
     # SUMMARY OF EACH DAY ON THE LAST ROW
-    totalRow = ['TOTAL']
+    totalRow = ['TOTAL'] + [''] * (len(labelColumns) - 1)
     for reportDay in reportDays:
         totalRow.append(sum([costMatrix[productCode].get(reportDay, 0) for productCode in productCodes], 0.0))
     totalRow.append(sum([productTotals[productCode] for productCode in productCodes], 0.0))
@@ -411,6 +417,9 @@ def runReports(memoryDb):
         FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY strftime(\'%Y-%m-%d\', lineItem_UsageStartDate), product_ProductName HAVING round(sum(lineItem_UnblendedCost),2) > 0 ORDER BY product_ProductName, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
     pivotDailyCostPerService(memoryDb, 'DAILY COSTS PER SERVICE - PIVOT (without Tax)', 'SELECT product_ProductName AS PRODUCT_CODE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, sum(lineItem_UnblendedCost) as TOTAL \
         FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)')
+    # the same daily costs split by usage type, to see what each service charges for (a NAT gateway or an EBS volume bills under EC2)
+    pivotDailyCostPerService(memoryDb, 'DAILY COSTS PER SERVICE AND USAGE TYPE - PIVOT (without Tax)', 'SELECT product_ProductName AS PRODUCT_CODE, lineItem_UsageType AS USAGE_TYPE, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate) AS DATE, sum(lineItem_UnblendedCost) as TOTAL \
+        FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName, lineItem_UsageType, strftime(\'%Y-%m-%d\', lineItem_UsageStartDate)', ['PRODUCT_CODE', 'USAGE_TYPE'], sortByLabel=True)
     queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND USAGE TYPE (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, lineItem_UsageType as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
         FROM line_items WHERE lineItem_LineItemType <> "Tax" GROUP BY product_ProductName,lineItem_UsageType HAVING round(SUM(lineItem_UsageAmount),2) > 0', )
     queryDatabase(memoryDb, 'SUBTOTAL PER PRODUCT AND OPERATION (without Tax)', 'SELECT product_ProductName as PRODUCT_CODE, lineItem_Operation as USAGE_TYPE, round(SUM(lineItem_UsageAmount),2) AS USAGE_AMOUNT, round(SUM(lineItem_UnblendedCost),2) AS BLENDED_COST \
